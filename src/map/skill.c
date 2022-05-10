@@ -12188,7 +12188,12 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			}
 		}
 
-
+		FALLTHROUGH
+case PF_FOGWALL:
+		if (map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR)) {
+			clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+			break;
+	}
 
 		FALLTHROUGH
 		case MG_FIREWALL:
@@ -12218,11 +12223,6 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case HT_CLAYMORETRAP:
 		case AS_VENOMDUST:
 		case AM_DEMONSTRATION:
-		case PF_FOGWALL:
-				if (map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR)) {
-					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-					break;
-			}
 		case PF_SPIDERWEB:
 		case HT_TALKIEBOX:
 		case WE_CALLPARTNER:
