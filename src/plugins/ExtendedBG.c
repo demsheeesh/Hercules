@@ -5508,7 +5508,7 @@ int record_requirement(struct map_session_data **sd_, uint16 *skill_id, uint16 *
  * pc_delitem PreHooked
  * @see pc_delitem
  **/
-int record_requirement_item(struct map_session_data **sd_, int *n, int *amount, int *type, short *reason, e_log_pick_type *log_type)
+int record_requirement_item(struct map_session_data *sd_, int *n, int *amount, int *type, short *reason, e_log_pick_type *log_type)
 {
 	struct map_session_data *sd = *sd_;
 	int is_bg = MAP_IS_NONE;
@@ -6260,7 +6260,7 @@ void bg_initialize_constants(void)
 /**
  * Executed Upon Server Start
  **/
-HPExport void plugin_init(void)
+HPExport void plugin_init (void)
 {
 	// Pre Hooks
 	addHookPre(pc, useitem, pc_useitem_pre);
