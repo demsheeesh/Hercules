@@ -1,0 +1,27 @@
+prontera,138,222,5	script	Currency Shop	4_BOARD3,{
+	mes " ";
+	mes " Currency Shop ";
+	mes " ";
+	close;
+}
+
+prontera,139,186,7	script	Player Customization	4_BOARD3,{
+	mes " ";
+	mes " Player Customization ";
+	mes " ";
+	close;
+}
+
+prontera,172,185,1	script	Refinery	4_BOARD3,{
+	mes " ";
+	mes " Refinery ";
+	mes " ";
+	close;
+}
+
+prontera,176,216,3	script	Shopping Centre	4_BOARD3,{
+	mes " ";
+	mes " Shopping Centre ";
+	mes " ";
+	close;
+}

@@ -1,0 +1,20 @@
+-	script	acmd_refreshdelay	-1,{
+  OnInit:
+    bindatcmd "warp",strnpcinfo(3)+"::OnAtcommand";
+  end;
+  OnAtcommand:
+  set .@delay,5; //delay in seconds
+  if (refreshdelay > gettimetick(2)) {
+    set .@delaytime,refreshdelay - gettimetick(2);
+    message strcharinfo(0),"You must wait "+.@delaytime+" seconds to use this command again.";
+    end;
+  }
+  setarray
+    .@param$,
+    .@atcmd_parameters$[0],
+    .@atcmd_parameters$[1],
+    .@atcmd_parameters$[2];
+    atcommand "@refresh";
+    set refreshdelay,gettimetick(2) + .@delay;
+    end;
+}

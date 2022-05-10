@@ -36,9 +36,9 @@
 //================= File Encoding =========================================
 //= CP-949 (EUC-KR compatible). Do NOT read/save it as UTF-8.
 //= -If the encoding is correct, the next three lines have the same length-
-//= ============ ¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä ============
+//= ============ ï¿½Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡Ä¡ï¿½ ============
 //= ============ ============================================= ============
-//= ============ ¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á¡Á ============
+//= ============ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ============
 //================= Description ===========================================
 //= Quests for Moscovia.
 //= The Moving Island, Help Mikhail, Acorn Exchange, Banish Winter, Shafka
@@ -3975,67 +3975,6 @@ mosk_in,211,259,5	script	Larissa#mos_01	4_F_RUSWOMAN2,{
 
 //== Acorn Exchange :: mos_squirrel ========================
 
-//- Acorn Dealer - Sells Acorns -
-moscovia,208,182,7	script	Acorn Dealer#mos	4_M_RUSMAN1,{
-	mes "[Acorn Dealer]";
-	mes "We have very fresh acorns. Everyone will like them!";
-	mes "You can buy one acorn for 100zeny!";
-	next;
-	if(select("Buy one.", "What can I use them for?") == 2) {
-		mes "[Acorn Dealer]";
-		mes "Well uh...";
-		mes "You can grind them to make";
-		mes "something to eat and you can feed squirrels.";
-		next;
-		mes "[Acorn Dealer]";
-		mes "Someone can decorate their house";
-		mes "with them but I don't know how...";
-		mes "they've got to be highly talented.";
-		mes "Haha.";
-		close;
-	}
-	mes "[Acorn Dealer]";
-	mes "I'll bet you that they are very fresh!";
-	mes "How many acorns do you need?";
-	next;
-	while (true) {
-		input(.@input);
-		if (.@input <= 0) {
-			mes "[Acorn Dealer]";
-			mes "Do you want to cancel this trade?";
-			close;
-		}
-		if (.@input > 500) {
-			mes "[Acorn Dealer]";
-			mes "You can't buy more than 500.";
-			next;
-			continue;
-		}
-		break;
-	}
-	if (!checkweight(Acorn, .@input)) {
-		mes "[Acorn Dealer]";
-		mes "Hello, I think you can't get acorns";
-		mes "now. You're carrying too many";
-		mes "items!";
-		mes "Please use Kafra service. I'll be";
-		mes "right here.";
-		close;
-	}
-	.@price = .@input * 100;
-	if (Zeny < .@price) {
-		mes "[Acorn Dealer]";
-		mes "Hello? You've turned pale! Are you ok??";
-		mes "Do you have enough money?";
-		close;
-	}
-	mes "[Acorn Dealer]";
-	mes "Oh, thank you...";
-	mes "What do you think of them? They're fresh, aren't they?";
-	Zeny -= .@price;
-	getitem Acorn,.@input;
-	close;
-}
 
 //- Big Squirrel - Trade Acorns for Gems -
 -	script	Squirrel#mos_main	FAKE_NPC,{
@@ -11359,7 +11298,7 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 				mes "One! Two! Three!!";
 				next;
 				if (.@rucard_game01 == 1) {
-					cutin "Æ÷¸µÄ«µå",4; // Poring Card
+					cutin "ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½",4; // Poring Card
 					emotion e_gasp;
 					emotion e_ic,1;
 					next;
@@ -11372,9 +11311,9 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 					next;
 				} else {
 					if (.@rucard_game01 == 2)
-						cutin "¿£Á©¸µÄ«µå",4; // Angeling Card
+						cutin "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½",4; // Angeling Card
 					else
-						cutin "°í½ºÆ®¸µÄ«µå",4; // Ghostring Card
+						cutin "ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½Ä«ï¿½ï¿½",4; // Ghostring Card
 					emotion e_gasp;
 					emotion e_omg,1;
 					next;
@@ -11395,7 +11334,7 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 				mes "One! Two! Three!!";
 				next;
 				if (.@rucard_game01 == 2) {
-					cutin "°í½ºÆ®¸µÄ«µå",4; // Angeling Card
+					cutin "ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½Ä«ï¿½ï¿½",4; // Angeling Card
 					emotion e_gasp;
 					emotion e_ic,1;
 					next;
@@ -11408,9 +11347,9 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 					next;
 				} else {
 					if (.@rucard_game01 == 1)
-						cutin "Æ÷¸µÄ«µå",4; // Poring Card
+						cutin "ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½",4; // Poring Card
 					else
-						cutin "°í½ºÆ®¸µÄ«µå",4; // Ghostring Card
+						cutin "ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½Ä«ï¿½ï¿½",4; // Ghostring Card
 					emotion e_gasp;
 					emotion e_omg,1;
 					next;
@@ -11431,7 +11370,7 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 				mes "One! Two! Three!!";
 				next;
 				if (.@rucard_game01 == 3) {
-					cutin "°í½ºÆ®¸µÄ«µå",4; // Ghostring Card
+					cutin "ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½Ä«ï¿½ï¿½",4; // Ghostring Card
 					emotion e_gasp;
 					emotion e_ic,1;
 					next;
@@ -11444,9 +11383,9 @@ mosk_dun02,57,220,0	script	House Ghost Jar#rus43	HIDDEN_NPC,{
 					next;
 				} else {
 					if (.@rucard_game01 == 1)
-						cutin "Æ÷¸µÄ«µå",4; // Poring Card
+						cutin "ï¿½ï¿½ï¿½ï¿½Ä«ï¿½ï¿½",4; // Poring Card
 					else
-						cutin "°í½ºÆ®¸µÄ«µå",4; // Angeling Card
+						cutin "ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½Ä«ï¿½ï¿½",4; // Angeling Card
 					emotion e_gasp;
 					emotion e_omg,1;
 					next;
