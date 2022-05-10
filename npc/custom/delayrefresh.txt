@@ -1,0 +1,71 @@
+/*=========================================================
+@go command
+Original concept by jTynne
+Revised by Mumbles
+===========================================================
+Description:
+Alternative @go command. Allows for unlimited aliasing, as
+well as level and group restrictions for each destination.
+
+Additional options to add a delay, prevent use when dead,
+and charge per use are available; default cost is defined
+with '.cost', but this parameter can be set manually with
+'go()'. These extra features are disabled by default.
+
+Be mindful that the delay uses a temporary player variable,
+'deblo_delay'; if the player logs out, this variable will be
+cleared. If you would like for a more secure delay, replace
+all instances of 'deblo_delay' with 'go_delay'.
+===========================================================
+Compatibility:
+Optimised for Hercules emulators.
+===========================================================
+Changelog:
+v1.0 - First version. [jTynne]
+v2.0 - Added additional parameters for locations. [jTynne]
+v3.0 - Optimised for Hercules emulators. [Mumbles]
+	v3.0.1 - Introduced limitless aliasing. [Mumbles]
+	v3.0.2 - Added go() function. [Mumbles]
+v3.1 - Added option to charge per use. [Mumbles]
+	v3.1.1 - Added option to limit use when dead. [Mumbles]
+	v3.1.2 - Added option to limit use to towns. [Mumbles]
+	v3.1.3 - Added changelog. [Mumbles]
+=========================================================*/
+
+-	script	at_refresh	-1,{
+
+	/*-----------------------------------------------------
+	Configuration
+	-----------------------------------------------------*/
+	OnInit:
+		.delay = 5;		// Delay per use, in seconds (default: 0)
+
+		bindatcmd "refresh", strnpcinfo(3) +"::OnAtcommand", 0, 2;
+		end;
+
+
+	/*-----------------------------------------------------
+	Function: go()
+	-------------------------------------------------------
+	Description: Warps player and checks prerequisites.
+	-------------------------------------------------------
+	Usage:
+	go(<"map_name">, <x>, <y>, <level>, <group>, <cost>)
+	-----------------------------------------------------*/
+	function refresh {
+		if (.delay && refresh_delay > gettimetick(2)) {
+			message strcharinfo(0), "You must wait "+ (refresh_delay - gettimetick(2))  +" seconds before using deblo again.";
+		}
+    else {
+			if (.delay) {
+				refresh_delay = gettimetick(2) + .delay;
+			}
+
+		message strcharinfo(0), "@refresh failed.";
+		end;
+	}
+
+}
+
+
+}

@@ -11,7 +11,7 @@
 //= 1.2 Fix style start at min_style, add Job_Summoner [AnnieRuru]
 //============================================================
 
-prontera,170,180,1	script	Stylist#custom_stylist	2_M_DYEINGER,{
+prontera,170,180,1	script	Stylist#custom_stylist	4_M_JP_JESTER,{
 	.@choose = select("Hair style", "Hair color", "Cloth color") - 1;
 	.@part = .look[.@choose];
 	if (BaseClass != Job_Summoner)

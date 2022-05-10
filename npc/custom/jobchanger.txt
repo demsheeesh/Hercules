@@ -1,0 +1,208 @@
+prontera,151,182,4	script	Bebus	4_M_SOULREAPER,{
+set $@blvl,99;// max lvl of your server
+set $@jlvl,70;// max job lvl of your server
+set $@jlvl2,50;// max job lvl of your server
+set $@jlvl3,99;// max job lvl of your server
+	if( Class != 0 && BaseLevel!= 1) goto zzzz;
+		mes "you can job change to any job in an instant";
+		mes "you can choose to be a rebirth class right away";
+		next;
+		mes "what do you wanna be?";
+		menu "Choose a class",L_r2nd,"Cancel",lclose;
+L_r2nd:
+switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","Assassin Cross","Paladin","Champion","Professor","Stalker","Creator","Clown","Gypsy","Taekwon","Star Gladiator","Soul Linker","Gunslinger","Ninja","Super Novice","Nothing"))
+	{
+	case 1:
+		jobchange 4008;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 2:
+		jobchange 4009;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 3:
+		jobchange 4010;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 4:
+		jobchange 4011;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 5:
+		jobchange 4012;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 6:
+		jobchange 4013;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 7:
+		jobchange 4015;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 8:
+		jobchange 4016;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 9:
+		jobchange 4017;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 10:
+		jobchange 4018;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 11:
+		jobchange 4019;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 12:
+		jobchange 4020;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+
+	case 13:
+		jobchange 4021;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+//tkr
+		case 14:
+			jobchange 4046;
+			set BaseLevel,$@blvl;
+			set JobLevel,$@jlvl2;
+			resetskill;
+			resetstatus;
+			percentheal 100,100;
+			break;
+//tkm
+			case 15:
+				jobchange 4047;
+				set BaseLevel,$@blvl;
+				set JobLevel,$@jlvl2;
+				resetskill;
+				resetstatus;
+				percentheal 100,100;
+				break;
+//sl
+				case 16:
+					jobchange 4049;
+					set BaseLevel,$@blvl;
+					set JobLevel,$@jlvl2;
+					resetskill;
+					resetstatus;
+					percentheal 100,100;
+					break;
+	//gun
+	case 17:
+		jobchange 24;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+	//ninja
+	case 18:
+		jobchange 25;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl;
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+	//sn
+	case 19:
+		jobchange 23;
+		set BaseLevel,$@blvl;
+		set JobLevel,$@jlvl3;
+		resetskill;
+		resetstatus;
+		percentheal 100,100;
+		break;
+	case 20:
+				mes "Come back when I can help you!";
+				break;
+		}
+close;
+	lclose:
+	close;
+	zzzz:
+	mes "[Bebus]";
+	mes "You have to be a Novice 1/1 to be use my service.";
+	mes "sorry I cant help you";
+	close;
+}

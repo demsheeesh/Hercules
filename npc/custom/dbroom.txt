@@ -1,0 +1,45 @@
+prontera,164,161,3	script	Private Branch Room	962,{
+setarray $@maps$[1], "06guild_01", "06guild_02", "06guild_03", "06guild_04", "06guild_05", "06guild_06", "06guild_07", "06guild_08";
+setarray .@price[1], 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000, 1000000;
+for(set .@b,1; .@b < getarraysize($@maps$); set .@b,.@b + 1) {
+	if(.@b==1){ set .@menu$, .@menu$  +((getmapusers($@maps$[.@b])>=30)?"^CD0000Closed^000000("+getmapusers($@maps$[.@b])+")":"^007700Open^000000("+getmapusers($@maps$[.@b])+") ["+.@price[.@b]+" zeny]")+":"; } else { set .@menu$, .@menu$  + "Private["+(.@b-1)+"]- "+((getmapusers(""+$@maps$[.@b]+"")>=5)?"^CD0000Closed^000000("+getmapusers($@maps$[.@b])+")":"^007700Open^000000("+getmapusers($@maps$[.@b])+") ["+.@price[.@b]+" zeny]")+":"; }
+}
+if(select(.@menu$)) {
+	if(Zeny<.@price[@menu]){mes "I'm sorry but you don't have enough Zeny, please come back later."; close;}
+	if(getmapusers($@maps$[@menu])<=30&&@menu==1){
+		set Zeny,Zeny-.@price[@menu];
+		set $@maps$,$@maps$[@menu];
+		setnpctimer 0; attachnpctimer(strcharinfo(0)); startnpctimer; warp $@maps$[@menu],150,148; end;
+	}
+	if(!getmapusers($@maps$[@menu])){
+		mes "Use Private DB Room for 30 minutes!";
+		mes "But you need to pay me 1 Million Zeny";
+		mes "Input a new password.";
+		input($password$[@menu]);
+		set Zeny,Zeny-.@price[@menu];
+		set $@maps$,$@maps$[@menu];
+		next; setnpctimer 0; attachnpctimer(strcharinfo(0)); startnpctimer; warp $@maps$[@menu],50,50; end;
+	}
+	if(getmapusers($@maps$[@menu])<=5&&@menu!=1) {
+		mes "This room is password protected please input the password now.";
+		input(@name$);
+		if(@name$==$password$[@menu]){
+			set Zeny,Zeny-.@price[@menu];
+			set $@maps$,$@maps$[@menu];
+			mes "correct!"; next; setnpctimer 0; attachnpctimer(strcharinfo(0)); startnpctimer; warp $@maps$[@menu],50,50; end;
+		} else {
+			mes "Incorrect!";
+			close;
+		}
+	} else {
+		mes "I'm sorry this room is full.";
+		close;
+	}
+}
+
+OnTimer1800000:
+if(strcharinfo(3)==$@maps$){
+	warp "prontera",156,181;
+	end;
+}
+}

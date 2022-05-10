@@ -4040,10 +4040,12 @@ static int skill_check_unit_range_sub(struct block_list *bl, va_list ap)
 
 	switch (skill_id) {
 		case AL_PNEUMA:
+		case MG_SAFETYWALL:
+		case WZ_FIREPILLAR:
 			if(g_skill_id == SA_LANDPROTECTOR)
 				break;
 			FALLTHROUGH
-		case MG_SAFETYWALL:
+		//case MG_SAFETYWALL:
 		case MH_STEINWAND:
 		case SC_MAELSTROM:
 		case SO_ELEMENTAL_SHIELD:
@@ -5189,7 +5191,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->area_temp[0] = 0;
 				skill->area_temp[1] = bl->id;
 				skill->area_temp[2] = 0;
-				
+
 				if (sd != NULL && (skill_id == SP_SHA || skill_id == SP_SWHOO) && bl->type != BL_MOB) {
 					status->change_start(src, bl, SC_STUN, 10000, skill_lv, 0, 0, 0, 500, 10);
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
@@ -6126,7 +6128,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					return 1;
 				}
 			}
-	
+
 			if (sd != NULL) { // Tagging the target.
 				int i;
 				ARR_FIND(0, MAX_STELLAR_MARKS, i, sd->stellar_mark[i] == bl->id);
@@ -6158,7 +6160,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		}
 			break;
 		case SJ_FALLINGSTAR_ATK:
-			if (sd != NULL) { // If a player used the skill it will search for targets marked by that player. 
+			if (sd != NULL) { // If a player used the skill it will search for targets marked by that player.
 				if (tsc != NULL && tsc->data[SC_FLASHKICK] != NULL && tsc->data[SC_FLASHKICK]->val4 == 1) { // Mark placed by a player.
 					int i = 0;
 
@@ -6196,7 +6198,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			)) {
 				// Requires target to have a soul link or target to have more than 10% of MaxHP.
 				// With this skill requiring a soul link or the target to have more than 10% of MaxHP
-				// I wonder, if the cooldown still happens after it fails. Need a confirm. [Rytech] 
+				// I wonder, if the cooldown still happens after it fails. Need a confirm. [Rytech]
 				if (sd != NULL)
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				break;
@@ -7655,7 +7657,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			}
 		}
 			break;
-		
+
 		case MO_CALLSPIRITS:
 			if (sd != NULL) {
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
@@ -7764,7 +7766,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		{
 			struct status_change *sc = status->get_sc(src);
 			int count = 0;
-	
+
 			if (skill_id == SJ_NEWMOONKICK) {
 				if (tsce != NULL) {
 					status_change_end(bl, type, INVALID_TIMER);
@@ -8589,6 +8591,14 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				skill->produce_mix(sd, skill_id, ITEMID_FIRE_BOTTLE, 0, 0, 0, 50);
 			}
 			break;
+		case AM_TWILIGHT4:
+				if (sd) {
+					clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
+					//Prepare 200 Blue Potions.
+					if (!skill->produce_mix(sd, skill_id, ITEMID_BLUE_POTION, 0, 0, 0, 200))
+						clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+				}
+				break;
 		case SA_DISPELL:
 		{
 			int splash;
@@ -9410,8 +9420,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SL_STAR:
 		case SL_SUPERNOVICE:
 		case SL_WIZARD:
-			if (sd != NULL && tsc != NULL && 
-				(tsc->data[SC_SOULGOLEM] || 
+			if (sd != NULL && tsc != NULL &&
+				(tsc->data[SC_SOULGOLEM] ||
 				tsc->data[SC_SOULSHADOW] ||
 				tsc->data[SC_SOULFALCON] ||
 				tsc->data[SC_SOULFAIRY])
@@ -9436,8 +9446,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			sc_start(src,src,SC_SMA_READY,100,skill_lv,skill->get_time(SL_SMA,skill_lv));
 			break;
 		case SL_HIGH:
-			if (sd != NULL && tsc != NULL && 
-				(tsc->data[SC_SOULGOLEM] != NULL || 
+			if (sd != NULL && tsc != NULL &&
+				(tsc->data[SC_SOULGOLEM] != NULL ||
 				tsc->data[SC_SOULSHADOW] != NULL ||
 				tsc->data[SC_SOULFALCON] != NULL ||
 				tsc->data[SC_SOULFAIRY] != NULL)
@@ -12177,10 +12187,12 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 				return 0; // Don't consume gems if cast on LP
 			}
 		}
+
+
+
 		FALLTHROUGH
 		case MG_FIREWALL:
 		case MG_THUNDERSTORM:
-
 		case AL_PNEUMA:
 		case WZ_FIREPILLAR:
 		case WZ_QUAGMIRE:
@@ -12207,6 +12219,10 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 		case AS_VENOMDUST:
 		case AM_DEMONSTRATION:
 		case PF_FOGWALL:
+				if (map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR)) {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+					break;
+			}
 		case PF_SPIDERWEB:
 		case HT_TALKIEBOX:
 		case WE_CALLPARTNER:
@@ -12298,6 +12314,11 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			skill->unitsetting(src,skill_id,skill_lv,x,y,0);
 			break;
 		case WZ_ICEWALL:
+				if (map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR)) {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+					break;
+				}
+
 			flag |= 1;
 			if( skill->unitsetting(src,skill_id,skill_lv,x,y,0) )
 				map->list[src->m].setcell(src->m, x, y, CELL_NOICEWALL, true);
@@ -13587,7 +13608,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 	nullpo_ret(sg=src->group);
 	nullpo_ret(ss=map->id2bl(sg->src_id));
 
-	if (skill->get_type(sg->skill_id, sg->skill_lv) == BF_MAGIC && map->getcell(src->bl.m, &src->bl, src->bl.x, src->bl.y, CELL_CHKLANDPROTECTOR) != 0 && sg->skill_id != SA_LANDPROTECTOR)
+if (skill->get_type(sg->skill_id, sg->skill_lv) == BF_MAGIC && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKLANDPROTECTOR) != 0 && sg->skill_id != SA_LANDPROTECTOR)
 		return 0; //AoE skills are ineffective. [Skotlex]
 	sc = status->get_sc(bl);
 
@@ -15281,6 +15302,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 				case AM_TWILIGHT1:
 				case AM_TWILIGHT2:
 				case AM_TWILIGHT3:
+				case AM_TWILIGHT4:
 					return 0;
 			}
 			break;
@@ -16474,6 +16496,7 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 				case AM_TWILIGHT1:
 				case AM_TWILIGHT2:
 				case AM_TWILIGHT3:
+				case AM_TWILIGHT4:
 					return 0;
 			}
 			break;
@@ -16706,7 +16729,7 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 				break;
 			}
 		}
-			
+
 
 		if(req.zeny > 0)
 		{
@@ -18186,6 +18209,29 @@ static int skill_cell_overlap(struct block_list *bl, va_list ap)
 			}
 			break;
 		case HW_GANBANTEIN:
+					switch (su->group->skill_id) {
+					case WZ_METEOR:
+						if(map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKLANDPROTECTOR)){
+							return 1;
+						}else{
+							skill->delunit(su);
+							return 1;
+						}
+					case WZ_STORMGUST:
+						if(map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKLANDPROTECTOR)){
+							return 1;
+						}else{
+							skill->delunit(su);
+							return 1;
+						}
+		            case SA_LANDPROTECTOR:
+						skill->delunit(su);
+						return 1;
+					 default:
+						skill->delunit(su);
+						return 1;
+		            }
+		            break;
 		case LG_EARTHDRIVE:
 		case GN_CRAZYWEED_ATK:
 			if( !(su->group->state.song_dance&0x1) ) {// Don't touch song/dance.
@@ -18245,8 +18291,8 @@ static int skill_cell_overlap(struct block_list *bl, va_list ap)
 
 	if (su->group->skill_id == SA_LANDPROTECTOR && !(skill->get_inf2(skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP))) {
 		//SA_LANDPROTECTOR blocks everything except songs/dances/traps (and NOLP)
-		(*alive) = 0;
-		return 1;
+		//(*alive) = 0;
+		//return 1;
 	}
 
 	return 0;
@@ -19007,8 +19053,8 @@ static int skill_unit_timer_sub_onplace(struct block_list *bl, va_list ap)
 
 	nullpo_ret(group);
 
-	if (!(skill->get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map->getcell(su->bl.m, &su->bl, su->bl.x, su->bl.y, CELL_CHKLANDPROTECTOR))
-		return 0; //AoE skills are ineffective. [Skotlex]
+	if (!(skill->get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKLANDPROTECTOR))
+			return 0; //AoE skills are ineffective. [Skotlex]
 
 	if( battle->check_target(&su->bl,bl,group->target_flag) <= 0 )
 		return 0;
@@ -19690,6 +19736,7 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 			case AM_TWILIGHT1:
 			case AM_TWILIGHT2:
 			case AM_TWILIGHT3:
+			case AM_TWILIGHT4:
 				make_per = pc->checkskill(sd,AM_LEARNINGPOTION)*50
 					+ pc->checkskill(sd,AM_PHARMACY)*300 + sd->status.job_level*20
 					+ (st->int_/2)*10 + st->dex*10+st->luk*10;
@@ -19950,6 +19997,7 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 				case AM_TWILIGHT1:
 				case AM_TWILIGHT2:
 				case AM_TWILIGHT3:
+				case AM_TWILIGHT4:
 					flag = battle_config.produce_item_name_input&0x2;
 					break;
 				case AL_HOLYWATER:
@@ -20001,7 +20049,8 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 					if( skill_id != AM_PHARMACY &&
 						skill_id != AM_TWILIGHT1 &&
 						skill_id != AM_TWILIGHT2 &&
-						skill_id != AM_TWILIGHT3 )
+						skill_id != AM_TWILIGHT3 &&
+						skill_id != AM_TWILIGHT4 )
 						continue;
 					//Add fame as needed.
 					switch(++sd->potion_success_counter) {
@@ -20032,6 +20081,7 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 				case AM_TWILIGHT1:
 				case AM_TWILIGHT2:
 				case AM_TWILIGHT3:
+				case AM_TWILIGHT4:
 				case ASC_CDP:
 					clif->produce_effect(sd,2,nameid);
 					clif->misceffect(&sd->bl,5);
@@ -20109,6 +20159,7 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 			case AM_TWILIGHT1:
 			case AM_TWILIGHT2:
 			case AM_TWILIGHT3:
+			case AM_TWILIGHT4:
 				clif->produce_effect(sd,3,nameid);
 				clif->misceffect(&sd->bl,6);
 				sd->potion_success_counter = 0; // Fame point system [DracoRPG]

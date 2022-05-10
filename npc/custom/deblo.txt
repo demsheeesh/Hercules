@@ -1,0 +1,90 @@
+/*=========================================================
+@go command
+Original concept by jTynne
+Revised by Mumbles
+===========================================================
+Description:
+Alternative @go command. Allows for unlimited aliasing, as
+well as level and group restrictions for each destination.
+
+Additional options to add a delay, prevent use when dead,
+and charge per use are available; default cost is defined
+with '.cost', but this parameter can be set manually with
+'go()'. These extra features are disabled by default.
+
+Be mindful that the delay uses a temporary player variable,
+'deblo_delay'; if the player logs out, this variable will be
+cleared. If you would like for a more secure delay, replace
+all instances of 'deblo_delay' with 'go_delay'.
+===========================================================
+Compatibility:
+Optimised for Hercules emulators.
+===========================================================
+Changelog:
+v1.0 - First version. [jTynne]
+v2.0 - Added additional parameters for locations. [jTynne]
+v3.0 - Optimised for Hercules emulators. [Mumbles]
+	v3.0.1 - Introduced limitless aliasing. [Mumbles]
+	v3.0.2 - Added go() function. [Mumbles]
+v3.1 - Added option to charge per use. [Mumbles]
+	v3.1.1 - Added option to limit use when dead. [Mumbles]
+	v3.1.2 - Added option to limit use to towns. [Mumbles]
+	v3.1.3 - Added changelog. [Mumbles]
+=========================================================*/
+
+-	script	at_deblo	-1,{
+
+	/*-----------------------------------------------------
+	Configuration
+	-----------------------------------------------------*/
+	OnInit:
+		.delay = 3600;		// Delay per use, in seconds (default: 0)
+		.cost = 0;	// Default cost to use command if '.charge' is enabled
+		.charge = 0;	// Charge to use command? 0 = no, 1 = yes (default: 0)
+		.deadlock = 1;	// Prevent usage when dead? 0 = no, 1 = yes (default: 0)
+		.town = 0;		// Require 'mf_town'? 0 = no, 1 = yes (default: 0)
+
+		bindatcmd "deblo", strnpcinfo(3) +"::OnAtcommand", 0, 2;
+		end;
+
+
+	/*-----------------------------------------------------
+	Function: go()
+	-------------------------------------------------------
+	Description: Warps player and checks prerequisites.
+	-------------------------------------------------------
+	Usage:
+	go(<"map_name">, <x>, <y>, <level>, <group>, <cost>)
+	-----------------------------------------------------*/
+	function deblo {
+		if (.deadlock && !Hp) {
+			message strcharinfo(0), "You may not use @deblo when you are dead.";
+		} else if (.town && !getmapflag(strcharinfo(3), MF_TOWN)) {
+			message strcharinfo(0), "You may only use @go in towns.";
+		} else if (.delay && deblo_delay > gettimetick(2)) {
+			message strcharinfo(0), "You must wait "+ (deblo_delay - gettimetick(2))  +" seconds before using deblo again.";
+		} else if (getgroupid() < getarg(4) || getmapflag(getarg(0), MF_NOWARP)) {
+			message strcharinfo(0), "You are not authorised to warp from this map.";
+		} else if (.charge && Zeny < getarg(5)) {
+			message strcharinfo(0), "You must have at least "+ getarg(5) +" zeny to warp to this map.";
+		} else {
+			if (.delay) {
+				deblo_delay = gettimetick(2) + .delay;
+			}
+
+			if (.charge) {
+				Zeny -= getarg(5);
+			}
+
+			warp "new_1-1",53,111;
+			end;
+		}
+
+		message strcharinfo(0), "@deblo failed.";
+		end;
+	}
+
+
+
+
+}

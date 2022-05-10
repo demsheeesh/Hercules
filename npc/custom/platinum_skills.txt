@@ -18,16 +18,14 @@
 //= 2.8 Clustered conditionals replaced with switch to include all Upper types. [Euphy]
 //============================================================
 
-prontera,128,200,6	script	Platinum Skill NPC	4_F_MAID,{
-	mes "[Platinum Skill NPC]";
-	mes "I can give you the special skills available to your job.";
-	mes "Would you like these skills now?";
-	next;
-	if (select("Yes Please", "No") == 2) {
-		mes "[Platinum Skill NPC]";
-		mes "Have a nice day... >.>";
-		close;
-	}
+prt_in,43,113,4	script	Platinum Skill NPC	4_F_MAID,{
+		.@price = 20000;	// Zeny required for heal
+	if (.@price) {
+		message strcharinfo(PC_NAME),"Platinum skills cost "+.@price+" Zeny.";
+		if (Zeny < .@price) end;
+	if(select("^0055FFPay^000000", "^777777Cancel^000000") == 2) close;
+	Zeny -= .@price;
+		}
 	skill 142,1,0;
 	switch(BaseClass) {
 		case 0: if (Class !=23) skill 143,1,0; break;

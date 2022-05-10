@@ -1345,14 +1345,14 @@ static unsigned int status_get_base_maxhp(const struct map_session_data *sd, con
 	val = status->dbs->HP_table[val][sd->status.base_level];
 
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_SUPER_NOVICE && sd->status.base_level >= 99)
-		val += 2000; //Supernovice lvl99 hp bonus.
+		val += 4000; //Supernovice lvl99 hp bonus.
 	if ((sd->job & MAPID_THIRDMASK) == MAPID_SUPER_NOVICE_E && sd->status.base_level >= 150)
 		val += 2000; //Extented Supernovice lvl150 hp bonus.
 
 	if ((sd->job & JOBL_UPPER) != 0)
 		val += val * 25 / 100; //Trans classes get a 25% hp bonus
 	else if ((sd->job & JOBL_BABY) != 0)
-		val = val * 70 / 100; //Baby classes get a 30% hp penalty
+		val = val * 100 / 100; //Baby classes get a 30% hp penalty
 
 	if ((sd->job & MAPID_UPPERMASK) == MAPID_TAEKWON && sd->status.base_level >= 90 && pc->fame_rank(sd->status.char_id, RANKTYPE_TAEKWON))
 		val *= 3; //Triple max HP for top ranking Taekwons over level 90.
@@ -11367,7 +11367,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			tsd->united_soul[sce->val3] = 0;
 		}
 			break;
-		
+
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 

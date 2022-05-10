@@ -47,23 +47,6 @@ OnInit:
 	sellitem Wing_Of_Butterfly;
 }
 
-prt_in,126,76,0	trader	Tool Dealer#prt1	1_M_INNKEEPER,{
-OnInit:
-	sellitem Spectacles;
-	sellitem Arrow;
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-	sellitem One_Eyed_Glass;
-}
-
 prontera,218,211,4	trader	Pet Groomer#prt	4_M_TELEPORTER,{
 OnInit:
 	sellitem Pet_Food;

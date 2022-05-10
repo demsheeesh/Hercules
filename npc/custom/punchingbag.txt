@@ -1,0 +1,275 @@
+//===== Hercules Script =============================================
+//= Punching Bag NPC with Parameter settings
+//===== By: ========================================================
+//= Secretdataz
+//= Modified by Mabuhay
+//= RagnaIDN
+//===== Current Version: ===========================================
+//= 3.0
+//===== Changelog: =================================================
+//= 0.1 Initial commit
+//= 0.2 Add MD_KNOCKBACK_IMMUNE
+//= 2.0 Added parameter settings
+//= 3.0 Convert into Hercules
+//===== Compatible With: ===========================================
+//= Hercules 07/01/2022
+//===== Additional Comments: =======================================
+//= When duplicating this NPC. Only use NUMBER after the # [secret]
+//= [NOTE#1]: Removed HP and Hit in param settings. Useless? Uncomment ALL to enable
+//==================================================================
+prontera,126,34,6	script	Punch Bag Owner#0	4_M_REBELLION,{
+function get_size_name;
+function get_race_name;
+function get_ele_name;
+	mes "[ Punch Bag Owner ]";
+	mes "Hi, I can set Samsak based on parameter you want.";
+	next;
+	menu "Show info", M1, "Set param", M2, "Set Default", M3, "^777777Cancel", M4;
+
+M1: .@dupid = atoi(strnpcinfo(NPC_NAME_HIDDEN));
+	.@size = getunitdata(.mobid[.@dupid], UDT_SIZE);
+	.@level = getunitdata(.mobid[.@dupid], UDT_LEVEL);
+	.@race = getunitdata(.mobid[.@dupid], UDT_RACE);
+	.@elet = getunitdata(.mobid[.@dupid], UDT_ELETYPE);
+	.@elelv = getunitdata(.mobid[.@dupid], UDT_ELELEVEL);
+	.@STR = getunitdata(.mobid[.@dupid], UDT_STR);
+	.@AGI = getunitdata(.mobid[.@dupid], UDT_AGI);
+	.@VIT = getunitdata(.mobid[.@dupid], UDT_VIT);
+	.@INT = getunitdata(.mobid[.@dupid], UDT_INT);
+	.@DEX = getunitdata(.mobid[.@dupid], UDT_DEX);
+	.@LUK = getunitdata(.mobid[.@dupid], UDT_LUK);
+	.@DEF = getunitdata(.mobid[.@dupid], UDT_DEF);
+	.@MDEF = getunitdata(.mobid[.@dupid], UDT_MDEF);
+	.@FLEE = getunitdata(.mobid[.@dupid], UDT_FLEE);
+	.@PDODGE = getunitdata(.mobid[.@dupid], UDT_PDODGE);
+
+	.@size$ = get_size_name(.@size);
+	.@race$ = get_race_name(.@race);
+	.@ele$ = get_ele_name(.@elet);
+	mes "^777777Size : ^000000"+ .@size$;
+	mes "^777777Level : ^000000"+ .@level;
+	mes "^777777Race : ^000000"+ .@race$;
+	mes "^777777Ele type : ^000000"+ .@ele$;
+	mes "^777777Ele level : ^000000"+ .@elelv;
+	//mes "^777777HP : ^000000"+ .@data[UDT_HP]; // disabled || uncomment to enable
+	mes "^777777Str : ^000000"+ .@STR;
+	mes "^777777Agi : ^000000"+ .@AGI;
+	mes "^777777Vit : ^000000"+ .@VIT;
+	mes "^777777Int : ^000000"+ .@INT;
+	mes "^777777Dex : ^000000"+ .@DEX;
+	mes "^777777Luk : ^000000"+ .@LUK;
+	mes "^777777Def : ^000000"+ .@DEF;
+	mes "^777777Mdef : ^000000"+ .@MDEF;
+	//mes "^777777Hit : ^000000"+ .@data[UDT_HIT]; // disabled || uncomment to enable
+	mes "^777777Flee : ^000000"+ .@FLEE;
+	mes "^777777Pdodge : ^000000"+ .@PDODGE;
+	close;
+
+M2:	setarray .menu$,
+		// Structure : <menu name>|<UDT_DATA>|<min value>|<max value>
+		"Size|UDT_SIZE|0|2",
+		"Level|UDT_LEVEL|1|99",
+		"Race|UDT_RACE|0|10",
+        "Ele type|UDT_ELETYPE|0|9",
+		"Ele level|UDT_ELELEVEL|1|4",
+		//"Hp|UDT_HP|1|99999999", // disabled = why need to set hp data? || uncomment to enable
+        "Str|UDT_STR|1|999",
+		"Agi|UDT_AGI|1|999",
+		"Vit|UDT_VIT|1|999",
+		"Int|UDT_INT|1|999",
+        "Dex|UDT_DEX|1|999",
+		"Luk|UDT_LUK|1|999",
+		"Def|UDT_DEF|1|999",
+		"Mdef|UDT_MDEF|1|999",
+		//"Hit|UDT_HIT|1|999", // disabled = why need to set hit data? || uncomment to enable
+        "Flee|UDT_FLEE|1|999",
+		"Pdodge|UDT_PDODGE|1|999";
+
+	for(.@i = 0; .@i < getarraysize(.menu$); .@i++) {
+		explode(.@n$, .menu$[.@i], "|");
+		.@menu$ += .@n$[0]+":";
+	}
+	.@s = select(.@menu$)-1;
+	explode(.data$, .menu$[.@s], "|");
+	mes "^777777Param to set :^000000 ^ff0000"+ .data$[0] +"^000000";
+	if ( .data$[0] == "Size" ) .@val$ = get_size_name(getd("."+.data$[1]));
+	else if ( .data$[0] == "Race" ) .@val$ = get_race_name(getd("."+.data$[1]));
+	else if ( .data$[0] == "Ele type" ) .@val$ = get_ele_name(getd("."+.data$[1]));
+	else .@val$ = getd("."+.data$[1]);
+	mes "^777777Current value :^000000 ^ff0000"+ .@val$ +"^000000";
+	mes "^777777Min value :^000000 ^ff0000"+ .data$[2] +"^000000";
+	mes "^777777Max value :^000000 ^ff0000"+ .data$[3] +"^000000";
+	mes "^777777---------------------^000000";
+	if ( .data$[0] == "Size" ) {
+		mes "^777777 0 - Small^000000";
+		mes "^777777 1 - Medium^000000";
+		mes "^777777 2 - Large^000000";
+	}
+	else if ( .data$[0] == "Race" ) {
+		mes "^777777 0 - Formless^000000";
+		mes "^777777 1 - Undead^000000";
+		mes "^777777 2 - Brute^000000";
+		mes "^777777 3 - Plant^000000";
+		mes "^777777 4 - Insect^000000";
+		mes "^777777 5 - Fish^000000";
+		mes "^777777 6 - Demon^000000";
+		mes "^777777 7 - Demi-Human^000000";
+		mes "^777777 8 - Angel^000000";
+		mes "^777777 9 - Dragon^000000";
+		mes "^777777 10 - Player(default race for player)^000000";
+	}
+	else if ( .data$[0] == "Ele type" ) {
+		mes "^777777 0 - Neutral^000000";
+		mes "^777777 1 - Water^000000";
+		mes "^777777 2 - Earth^000000";
+		mes "^777777 3 - Fire^000000";
+		mes "^777777 4 - Wind^000000";
+		mes "^777777 5 - Poison^000000";
+		mes "^777777 6 - Holy^000000";
+		mes "^777777 7 - Shadow^000000";
+		mes "^777777 8 - Ghost^000000";
+		mes "^777777 9 - Undead^000000";
+	}
+	else
+		mes "^777777 Enter a value between min and max ^000000";
+	next;
+	input .@val;
+	if ( .data$[0] == "Size" ) .@size$ = get_size_name(.@val);
+	else if ( .data$[0] == "Race" ) .@race$ = get_race_name(.@val);
+	else if ( .data$[0] == "Ele type" ) .@ele$ = get_ele_name(.@val);
+	mes "Do you want to set ^ff0000"+.data$[0]+"^000000 to ^ff0000"+((.data$[0] == "Size") ? .@size$:((.data$[0] == "Race") ? .@race$:((.data$[0] == "Ele type") ? .@ele$:.@val)))+"^000000?";
+	mes "^777777---------------------^000000";
+	next;
+	select("Yes");
+	mes "Respawning Samsak..";
+	close2;
+	setd "."+.data$[1], .@val;
+	killmonster strnpcinfo(4),strnpcinfo(0)+"::OnMyMobDead";
+	donpcevent strnpcinfo(0)+"::OnMyMobDead";
+	end;
+
+M3:
+	mes "Respawning Samsak..";
+	close2;
+	.UDT_SIZE = 1;
+	.UDT_LEVEL = 99;
+	.UDT_RACE = 7;
+	.UDT_ELETYPE = Ele_Neutral;
+	.UDT_ELELEVEL = 3;
+	//.UDT_HP = 99999999; // disabled || uncomment to enable
+	.UDT_STR = 10;
+	.UDT_AGI = 10;
+	.UDT_VIT = 10;
+	.UDT_INT = 10;
+	.UDT_DEX = 10;
+	.UDT_LUK = 10;
+	.UDT_DEF = 20;
+	.UDT_MDEF = 20;
+	//.UDT_HIT = 99; // disabled || uncomment to enable
+	.UDT_FLEE = 10;
+	.UDT_PDODGE = 10;
+	killmonster strnpcinfo(4),strnpcinfo(0)+"::OnMyMobDead";
+	donpcevent strnpcinfo(0)+"::OnMyMobDead";
+M4: end;
+
+
+OnInit:
+	// Default values on initial spawn
+	.UDT_SIZE = 1;
+	.UDT_LEVEL = 99;
+	.UDT_RACE = 7;
+	.UDT_ELETYPE = Ele_Neutral;
+	.UDT_ELELEVEL = 3;
+	//.UDT_HP = 99999999; // disabled || uncomment to enable
+	.UDT_STR = 10;
+	.UDT_AGI = 10;
+	.UDT_VIT = 10;
+	.UDT_INT = 10;
+	.UDT_DEX = 10;
+	.UDT_LUK = 10;
+	.UDT_DEF = 20;
+	.UDT_MDEF = 20;
+	//.UDT_HIT = 99; // disabled || uncomment to enable
+	.UDT_FLEE = 10;
+	.UDT_PDODGE = 10;
+OnMyMobDead:
+	.mobid = monster( "vpayon",130,36,"Samsak",2410,1,strnpcinfo(0)+"::OnMyMobDead");
+	getunitdata(getnpcid(0), .@d);
+	.@dupid = atoi(strnpcinfo(NPC_NAME_HIDDEN));
+	.gid[.@dupid] = .mobid;
+	.mhp[.@dupid] = strmobinfo(4,2410);
+	setunitdata .gid[.@dupid],UDT_MODE,.@d[UDT_MODE]|0x4000000|0x0200000; // Set MD_STATUS_IMMUNE (0x4000000) because EDP/burn/%MHP based status can skew the DPS counter so much.
+	setunitdata .gid[.@dupid], UDT_SIZE, .UDT_SIZE;
+	setunitdata .gid[.@dupid], UDT_LEVEL, .UDT_LEVEL;
+	setunitdata .gid[.@dupid], UDT_RACE, .UDT_RACE;
+	setunitdata .gid[.@dupid], UDT_ELETYPE, .UDT_ELETYPE;
+	setunitdata .gid[.@dupid], UDT_ELELEVEL, .UDT_ELELEVEL;
+	//setunitdata .gid[.@dupid], UDT_HP, .UDT_HP;  // disabled || uncomment to enable
+	setunitdata .gid[.@dupid], UDT_STR, .UDT_STR;
+	setunitdata .gid[.@dupid], UDT_AGI, .UDT_AGI;
+	setunitdata .gid[.@dupid], UDT_VIT, .UDT_VIT;
+	setunitdata .gid[.@dupid], UDT_INT, .UDT_INT;
+	setunitdata .gid[.@dupid], UDT_DEX, .UDT_DEX;
+	setunitdata .gid[.@dupid], UDT_LUK, .UDT_LUK;
+	setunitdata .gid[.@dupid], UDT_DEF, .UDT_DEF;
+	setunitdata .gid[.@dupid], UDT_MDEF, .UDT_MDEF;
+	//setunitdata .gid[.@dupid], UDT_HIT, .UDT_HIT; // disabled || uncomment to enable
+	setunitdata .gid[.@dupid], UDT_FLEE, .UDT_FLEE;
+	setunitdata .gid[.@dupid], UDT_PDODGE, .UDT_PDODGE;
+	initnpctimer;
+	end;
+
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(NPC_NAME_HIDDEN));
+	if(.mobid){
+		.@mhp = getunitdata(.gid[.@dupid],UDT_HP);
+		.@diff = (.mhp[.@dupid] - .@mhp);
+		if(.@diff > 0){
+			npctalk "Punching Bag has taken " + (.@diff) + " DPS in last 5 seconds.";
+			setunitdata .gid[.@dupid],UDT_HP,.mhp[.@dupid];
+		}
+	}
+	initnpctimer;
+	end;
+	function	get_size_name	{
+		switch ( getarg(0) ) {
+			case 0 : .@val$ = "Small"; break;
+			case 1 : .@val$ = "Medium"; break;
+			case 2 : .@val$ = "Large"; break;
+		}
+		return .@val$;
+	}
+
+	function	get_race_name	{
+		switch ( getarg(0) ) {
+			case 0: .@val$ = "Formless"; break;
+			case 1: .@val$ = "Undead"; break;
+			case 2: .@val$ = "Brute"; break;
+			case 3: .@val$ = "Plant"; break;
+			case 4: .@val$ = "Insect"; break;
+			case 5: .@val$ = "Fish"; break;
+			case 6: .@val$ = "Demon"; break;
+			case 7: .@val$ = "Demi-Human"; break;
+			case 8: .@val$ = "Angel"; break;
+			case 9: .@val$ = "Dragon"; break;
+			case 10: .@val$ = "Player"; break;
+		}
+		return .@val$;
+	}
+
+	function	get_ele_name	{
+		switch ( getarg(0) ) {
+			case 0: .@val$ = "Neutral"; break;
+			case 1: .@val$ = "Water"; break;
+			case 2: .@val$ = "Earth"; break;
+			case 3: .@val$ = "Fire"; break;
+			case 4: .@val$ = "Wind"; break;
+			case 5: .@val$ = "Poison"; break;
+			case 6: .@val$ = "Holy"; break;
+			case 7: .@val$ = "Shadow"; break;
+			case 8: .@val$ = "Ghost"; break;
+			case 9: .@val$ = "Undead"; break;
+		}
+		return .@val$;
+	}
+}
