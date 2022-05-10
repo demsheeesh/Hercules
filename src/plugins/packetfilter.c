@@ -107,7 +107,7 @@ static int pc_reg_received_post(int retVal, struct map_session_data *sd) {
 
 static struct map_session_data *target_sd(struct block_list *bl) {
 	nullpo_retr(NULL, bl);
-	if ((bl->type & (BL_PC|BL_PET|BL_HOM|BL_MER|BL_ELEM|BL_MOB|BL_NUM|BL_ITEM|BL_SKILL|BL_NPC|BL_CHAT|BL_ALL)) == 0)
+	if ((bl->type & (BL_PC|BL_PET|BL_HOM|BL_MER|BL_ELEM|BL_MOB|BL_NUL|BL_ITEM|BL_SKILL|BL_NPC|BL_CHAT|BL_ALL)) == 0)
 		return NULL;
 	struct map_session_data *sd = NULL;
 	switch (bl->type) {
@@ -157,7 +157,7 @@ static struct map_session_data *target_sd(struct block_list *bl) {
 static bool check_filter(int flag, struct map_session_data *sd, struct block_list *tbl, struct map_session_data *tsd) {
 	nullpo_retr(false, sd);
 	nullpo_retr(false, tbl);
-	if ((tbl->type & (BL_PC|BL_PET|BL_HOM|BL_MER|BL_ELEM|BL_MOB|BL_NUM|BL_ITEM|BL_SKILL|BL_NPC|BL_CHAT|BL_ALL)) == 0)
+	if ((tbl->type & (BL_PC|BL_PET|BL_HOM|BL_MER|BL_ELEM|BL_MOB|BL_NUL|BL_ITEM|BL_SKILL|BL_NPC|BL_CHAT|BL_ALL)) == 0)
 		return true;
 	if ((flag & FILTER_SELF) != 0 && tsd != NULL) {
 		if (sd->status.account_id == tsd->status.account_id)
