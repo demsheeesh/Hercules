@@ -14,24 +14,31 @@
 
 -	script	Nurse Joy	FAKE_NPC,{
 
-	.@price = 1000;	// Zeny required for heal
-	.@Buffs = 0;	// Also buff players? (1: yes / 0: no)
-	.@Delay = 5;	// Heal delay, in seconds
+	set .@Price,5000;	// Zeny required for heal
+	set .@Buffs,1;	// Also buff players? (1: yes / 0: no)
+	set .@Delay,0;	// Heal delay, in seconds
 
+	callfunc "F_ClearGarbage",0;
 	if (@HD > gettimetick(2)) end;
-	if (.@price) {
-		message strcharinfo(PC_NAME),"Healing costs "+.@price+" Zeny.";
-		if (Zeny < .@price) end;
-		if(select("^0055FFHeal^000000", "^777777Cancel^000000") == 2) close;
-		Zeny -= .@price;
-		end;
+	if (.@Price) {
+		message strcharinfo(0),"Healing costs "+.@Price+" Zeny.";
+		if (Zeny < .@Price) end;
+		if(select("^0055FFHeal^000000:^777777Cancel^000000") == 2) close;
+		set Zeny, Zeny-.@Price;
 	}
-	specialeffect(EF_HEAL2, AREA, playerattached()); percentheal 100,100;
+	/*Repair*/
+	while (getbrokenid(1)) {
+	repair(1);
+	set .@i, .@i +1;
+    }
+    if (.@i) dispbottom .@i + " items repaired.";
+	/*Heal*/
+	specialeffect2 313; percentheal 100,100;
 	if (.@Buffs) {
-		specialeffect(EF_INCAGILITY, AREA, playerattached()); sc_start SC_INC_AGI,240000,10;
-		specialeffect(EF_BLESSING, AREA, playerattached()); sc_start SC_BLESSING,240000,10;
+		skilleffect 34,0; sc_start SC_INC_AGI,240000,10;
+		skilleffect 29,0; sc_start SC_BLESSING,240000,10;
 	}
-	if (.@Delay) @HD = gettimetick(2)+.@Delay;
+	if (.@Delay) set @HD, gettimetick(2)+.@Delay;
 	end;
 }
 
