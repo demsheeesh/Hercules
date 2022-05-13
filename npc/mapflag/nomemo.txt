@@ -180,7 +180,7 @@ ra_fild04	mapflag	nomemo
 ve_fild01	mapflag	nomemo
 ve_fild02	mapflag	nomemo
 cave	mapflag	nomemo
-xmas_fild01 mapflag nomemo
+xmas_fild01	mapflag	nomemo
 
 // Job Quests ================
 // First Job Class
