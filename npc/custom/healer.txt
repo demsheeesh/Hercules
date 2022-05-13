@@ -26,12 +26,6 @@
 		if(select("^0055FFHeal^000000:^777777Cancel^000000") == 2) close;
 		set Zeny, Zeny-.@Price;
 	}
-	/*Repair*/
-	while (getbrokenid(1)) {
-	repair(1);
-	set .@i, .@i +1;
-    }
-    if (.@i) dispbottom .@i + " items repaired.";
 	/*Heal*/
 	specialeffect2 313; percentheal 100,100;
 	if (.@Buffs) {
