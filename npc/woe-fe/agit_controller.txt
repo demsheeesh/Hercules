@@ -48,8 +48,6 @@
 
 OnClock2100:	//start time for Tues(2), Thurs(4)
 OnClock2200:	//end time for Tues(2), Thurs(4)
-OnClock2100:	//start time for Sat(6)
-OnClock2200:	//end time for Sat(6)
 
 OnAgitInit:
 	// starting time checks
