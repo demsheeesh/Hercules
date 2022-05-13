@@ -1,6 +1,6 @@
 -	script	acmd_refreshdelay	-1,{
   OnInit:
-    bindatcmd "warp",strnpcinfo(3)+"::OnAtcommand";
+    bindatcmd "refresh",strnpcinfo(3)+"::OnAtcommand";
   end;
   OnAtcommand:
   set .@delay,5; //delay in seconds
