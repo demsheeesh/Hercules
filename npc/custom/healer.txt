@@ -16,7 +16,7 @@
 
 	.@price = 1000;	// Zeny required for heal
 	.@Buffs = 0;	// Also buff players? (1: yes / 0: no)
-	.@Delay = 5;	// Heal delay, in seconds
+	.@Delay = 1;	// Heal delay, in seconds
 
 	if (@HD > gettimetick(2)) end;
 	if (.@price) {
@@ -24,7 +24,6 @@
 		if (Zeny < .@price) end;
 		if(select("^0055FFHeal^000000", "^777777Cancel^000000") == 2) close;
 		Zeny -= .@price;
-		end;
 	}
 	specialeffect(EF_HEAL2, AREA, playerattached()); percentheal 100,100;
 	if (.@Buffs) {
@@ -32,8 +31,9 @@
 		specialeffect(EF_BLESSING, AREA, playerattached()); sc_start SC_BLESSING,240000,10;
 	}
 	if (.@Delay) @HD = gettimetick(2)+.@Delay;
-	end;
-	close;
+	mes "[Nurse Joy]";
+	mes "There you go!";
+		close;
 }
 
 
