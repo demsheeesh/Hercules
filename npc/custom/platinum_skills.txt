@@ -18,7 +18,7 @@
 //= 2.8 Clustered conditionals replaced with switch to include all Upper types. [Euphy]
 //============================================================
 
-prt_in,43,113,4	script	Platinum Skill NPC	4_F_MAID,{
+prontera,128,200,6	script	Platinum Skill NPC	4_F_MAID,{
 		.@price = 20000;	// Zeny required for heal
 	if (.@price) {
 		message strcharinfo(PC_NAME),"Platinum skills cost "+.@price+" Zeny.";

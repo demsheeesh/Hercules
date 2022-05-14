@@ -549,10 +549,10 @@ ein_in01,38,29,0	script	Paul Spanner	1_M_SMITH,{
 }
 
 //== Weapon/Armor Refiners =================================
-//prt_in,63,60,0	script	Hollgrehenn	4_M_03,{
-//	callfunc "refinemain","Hollgrehenn",0;
-//	end;
-//}
+prt_in,63,60,0	script	Hollgrehenn	4_M_03,{
+	callfunc "refinemain","Hollgrehenn",0;
+	end;
+}
 morocc_in,73,38,6	script	Aragham	4W_M_03,{
 	callfunc "refinemain","Aragham",0;
 	end;
@@ -592,7 +592,7 @@ function	script	refinemain	{
 	if (getbattleflag("features/replace_refine_npcs") == 1) {
 		if (openrefineryui())
 			close();
-	}
+	}	
 	next();
 
 	disable_items;

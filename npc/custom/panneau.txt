@@ -5,14 +5,14 @@ prontera,138,222,5	script	Currency Shop	4_BOARD3,{
 	close;
 }
 
-prontera,138,185,5	script	Player Customization	4_BOARD3,{
+prontera,139,186,7	script	Player Customization	4_BOARD3,{
 	mes " ";
 	mes " Player Customization ";
 	mes " ";
 	close;
 }
 
-prontera,172,185,3	script	Refinery	4_BOARD3,{
+prontera,172,185,1	script	Refinery	4_BOARD3,{
 	mes " ";
 	mes " Refinery ";
 	mes " ";

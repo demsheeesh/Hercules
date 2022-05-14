@@ -13,7 +13,7 @@
 //= - Different fail results
 //= Go to the end of the script to change the settings.
 //============================================================
-prt_in,63,60,0	script	Refiner	1_M_SMITH,{
+prontera,147,188,4	script	Refiner	1_M_SMITH,{
 	function ShowChanceInfo; function ShowSecureInfo;
 	function GetChanceBonus; function GetSecure;
 	function ConsumeSecure; function Refine;

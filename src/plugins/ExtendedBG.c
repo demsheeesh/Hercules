@@ -5508,7 +5508,7 @@ int record_requirement(struct map_session_data **sd_, uint16 *skill_id, uint16 *
  * pc_delitem PreHooked
  * @see pc_delitem
  **/
-int record_requirement_item(struct map_session_data **sd_, int n, int *amount, int *type, short *reason, e_log_pick_type *log_type)
+int record_requirement_item(struct map_session_data **sd_, int *n, int *amount, int *type, short *reason, e_log_pick_type *log_type)
 {
 	struct map_session_data *sd = *sd_;
 	int is_bg = MAP_IS_NONE;
@@ -5519,7 +5519,7 @@ int record_requirement_item(struct map_session_data **sd_, int n, int *amount, i
 	if ((*reason) != DELITEM_SKILLUSE)
 		return 1;
 
-	if (sd->status.inventory[n].nameid == 0 || *amount <= 0 || sd->status.inventory[n].amount < *amount || sd->inventory_data[n] == NULL)
+	if (sd->status.inventory[*n].nameid == 0 || *amount <= 0 || sd->status.inventory[*n].amount < *amount || sd->inventory_data[*n] == NULL)
 		return 1;
 
 	sd_data = pdb_search(sd, false);
@@ -5528,7 +5528,7 @@ int record_requirement_item(struct map_session_data **sd_, int n, int *amount, i
 	if (is_bg == MAP_IS_NONE)
 		return 1;
 
-	switch (sd->status.inventory[n].nameid) {
+	switch (sd->status.inventory[*n].nameid) {
 		case ITEMID_POISON_BOTTLE:
 			SET_VARIABLE_ADD(sd, ranking, RANKING_POISON_BOTTLE, *amount, unsigned int);
 			break;
@@ -6260,7 +6260,7 @@ void bg_initialize_constants(void)
 /**
  * Executed Upon Server Start
  **/
-HPExport void plugin_init (void)
+HPExport void plugin_init(void)
 {
 	// Pre Hooks
 	addHookPre(pc, useitem, pc_useitem_pre);

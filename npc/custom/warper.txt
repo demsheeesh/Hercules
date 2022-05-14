@@ -121,12 +121,12 @@ function Restrict {
 	Towns:
 // --------------------------------------------------
 menu	"Prontera",T1, "Alberta",T2, "Aldebaran",T3, "Amatsu",T4, "Ayothaya",T5,
-		"Comodo",T7, "Einbech",T10,
-		"Einbroch",T11, "Geffen",T13, "Gonryun",T14, "Hugel",T15,
+		"Brasilis",T6, "Comodo",T7, "Dewata",T8, "Eclage",T9, "Einbech",T10,
+		"Einbroch",T11, "El Dicastes",T12, "Geffen",T13, "Gonryun",T14, "Hugel",T15,
 		"Izlude",T16, "Jawaii",T17, "Lighthalzen",T18, "Louyang",T19, "Lutie",T20,
 		"Malangdo",T21, "Malaya",T22, "Manuk",T23, "Midgarts Expedition Camp",T24,
-		"Morroc",T26, "Moscovia",T27, "Nameless Island",T28,
-	 	"Payon",T30, "Rachel",T31, "Splendide",T32, "Thor Camp",T33,
+		"Mora",T25, "Morroc",T26, "Moscovia",T27, "Nameless Island",T28,
+		"Niflheim",T29, "Payon",T30, "Rachel",T31, "Splendide",T32, "Thor Camp",T33,
 		"Umbala",T34, "Veins",T35, "Yuno",T36;
 
 T1: Go("prontera",155,183);
