@@ -33,7 +33,7 @@
 #                                                                    #
 # Note: DO NOT include the .c extension!!!                           #
 
-MYPLUGINS := $(MYPLUGINS) ExtendedBG ExtendedBG-char koe showrare checkresist costume
+MYPLUGINS := $(MYPLUGINS) ExtendedBG ExtendedBG-char
 
 #                                                                    #
 #########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################
