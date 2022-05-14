@@ -13608,7 +13608,7 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 	nullpo_ret(sg=src->group);
 	nullpo_ret(ss=map->id2bl(sg->src_id));
 
-if (skill->get_type(sg->skill_id, sg->skill_lv) == BF_MAGIC && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKLANDPROTECTOR) != 0 && sg->skill_id != SA_LANDPROTECTOR)
+	if (skill->get_type(sg->skill_id, sg->skill_lv) == BF_MAGIC && map->getcell(src->bl.m, &src->bl, src->bl.x, src->bl.y, CELL_CHKLANDPROTECTOR) != 0 && sg->skill_id != SA_LANDPROTECTOR)
 		return 0; //AoE skills are ineffective. [Skotlex]
 	sc = status->get_sc(bl);
 
@@ -19053,8 +19053,8 @@ static int skill_unit_timer_sub_onplace(struct block_list *bl, va_list ap)
 
 	nullpo_ret(group);
 
-	if (!(skill->get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map->getcell(bl->m, bl, bl->x, bl->y, CELL_CHKLANDPROTECTOR))
-			return 0; //AoE skills are ineffective. [Skotlex]
+	if (!(skill->get_inf2(group->skill_id)&(INF2_SONG_DANCE|INF2_TRAP|INF2_NOLP)) && map->getcell(su->bl.m, &su->bl, su->bl.x, su->bl.y, CELL_CHKLANDPROTECTOR))
+		return 0; //AoE skills are ineffective. [Skotlex]
 
 	if( battle->check_target(&su->bl,bl,group->target_flag) <= 0 )
 		return 0;
