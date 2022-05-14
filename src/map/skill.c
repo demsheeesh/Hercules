@@ -12188,16 +12188,16 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 			}
 		}
 
-case PF_FOGWALL:
-		if (map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR)) {
-			clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
-			break;
-	}
 
 		FALLTHROUGH
 		case MG_FIREWALL:
 		case MG_THUNDERSTORM:
 		case AL_PNEUMA:
+		case PF_FOGWALL:
+				if (map->getcell(src->m, src, x, y, CELL_CHKLANDPROTECTOR)) {
+					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+					break;
+			}
 		case WZ_FIREPILLAR:
 		case WZ_QUAGMIRE:
 		case WZ_VERMILION:
