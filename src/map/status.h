@@ -1329,7 +1329,9 @@ struct status_interface {
 	int (*get_sc_relevant_bl_types) (sc_type type);
 	int (*get_sc_type) (sc_type idx);
 	int (*get_sc_icon) (sc_type type);
-	int (*damage) (struct block_list *src,struct block_list *target,int64 hp,int64 sp, int walkdelay, int flag);
+	//int (*damage) (struct block_list *src,struct block_list *target,int64 hp,int64 sp, int walkdelay, int flag);
+	int (*damage) (struct block_list *src, struct block_list *target, int64 hp, int64 sp, int walkdelay, int flag);
+	int (*damage_) (struct block_list *src, struct block_list *target, int64 hp, int64 sp, int walkdelay, int flag, int skill);
 	//Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
 	int (*charge) (struct block_list* bl, int64 hp, int64 sp);
 	int (*percent_change) (struct block_list *src,struct block_list *target,signed char hp_rate, signed char sp_rate, int flag);

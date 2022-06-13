@@ -1161,6 +1161,12 @@ END_ZEROED_BLOCK; /* End */
 	int (*read_attr_fix_db_level) (struct config_setting_t *def_lv, enum elements def_ele, int lv, const char *def_ele_name);
 	int (*map_day_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
 	int (*map_night_timer) (int tid, int64 tick, int id, intptr_t data); // by [yor]
+
+	void (*record_damage) (struct block_list *src, struct block_list *dst, int damage);
+	void (*record_maxdamage) (struct block_list *src, struct block_list *dst, int damage);
+	void (*record_mobkills) (struct map_session_data *sd, struct mob_data *md);
+	void (*calc_ranking) (struct map_session_data *tsd, struct map_session_data *ssd, int skill_id);
+	
 	// Rental System
 	void (*inventory_rentals) (struct map_session_data *sd);
 	int (*inventory_rental_clear) (struct map_session_data *sd);

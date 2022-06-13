@@ -3821,7 +3821,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			) {
 				if (!rmdamage){
 					clif->damage(d_bl, d_bl, 0, 0, damage, 0, BDT_NORMAL, 0);
-					status_fix_damage(NULL, d_bl, damage, 0);
+					status_fix_damage(NULL, d_bl, damage, 0, 0);
 				} else { //Reflected magics are done directly on the target not on paladin
 					//This check is only for magical skill.
 					//For BF_WEAPON skills types track var rdamage and function battle_calc_return_damage
@@ -3831,7 +3831,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			} else {
 				status_change_end(bl, SC_DEVOTION, INVALID_TIMER);
 				if (!dmg.amotion)
-					status_fix_damage(src, bl, damage, dmg.dmotion);
+					status_fix_damage(src, bl, damage,dmg.dmotion, 0);
 			}
 		}
 		if (sc->data[SC_WATER_SCREEN_OPTION]) {
@@ -3844,7 +3844,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 					status_fix_damage(NULL, e_bl, damage, 0);
 				} else {
 					clif->skill_damage(bl, bl, timer->gettick(), 0, 0, damage, dmg.div_, skill_id, -1, skill->get_hit(skill_id, skill_lv));
-					status_fix_damage(bl, bl, damage, 0);
+					status_fix_damage(bl, bl, damage, 0, 0);
 				}
 			}
 		}
@@ -6863,6 +6863,17 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						heal_get_jobexp = 1;
 					pc->gainexp(sd, bl, 0, heal_get_jobexp, false);
 				}
+
+							if(sd && dstsd && heal > 0 && sd != dstsd)
+								{
+									if (sd->status.guild_id && map_allowed_woe(src->m))
+									{
+										if (sd->status.guild_id == dstsd->status.guild_id || guild_isallied(sd->status.guild_id, dstsd->status.guild_id))
+											 add2limit(sd->status.woe_statistics.healing_done, heal_get_jobexp, UINT_MAX);
+										else
+											 add2limit(sd->status.woe_statistics.wrong_healing_done, heal_get_jobexp, UINT_MAX);
+									}
+								}
 			}
 			break;
 
@@ -8200,7 +8211,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case MER_SCAPEGOAT:
 			if( mer && mer->master ) {
 				status->heal(&mer->master->bl, mer->battle_status.hp, 0, STATUS_HEAL_SHOWEFFECT);
-				status->damage(src, src, mer->battle_status.max_hp, 0, 0, 1);
+				//status->damage(src, src, mer->battle_status.max_hp, 0, 0, 1);
+				status->damage_(src, src, mer->battle_status.max_hp, 0, 0, 1, skill_id);
 			}
 			break;
 
@@ -9339,7 +9351,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						break;
 					case 3: // 1000 damage, random armor destroyed
 						{
-							status_fix_damage(src, bl, 1000, 0);
+							//status_fix_damage(src, bl, 1000, 0);
+							status_fix_damage(src, bl, 1000, 0, skill_id);
 							clif->damage(src,bl,0,0,1000,0,BDT_NORMAL,0);
 							if( !status->isdead(bl) ) {
 								int where[] = {EQP_ARMOR, EQP_SHIELD, EQP_HELM};
@@ -11685,6 +11698,19 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		if( sc && sc->data[SC_CURSEDCIRCLE_ATKER] )//Should only remove after the skill had been casted.
 			status_change_end(src,SC_CURSEDCIRCLE_ATKER,INVALID_TIMER);
 	}
+
+		if (skill_get_inf(skill_id)&INF_SUPPORT_SKILL && sd && dstsd && sd != dstsd)
+		{
+			if (map_allowed_woe(src->m) && sd->status.guild_id)
+			{
+				if (sd->status.guild_id == dstsd->status.guild_id || guild_isallied(sd->status.guild_id, dstsd->status.guild_id))
+					add2limit(sd->status.woe_statistics.support_skills_used, 1, UINT_MAX);
+				else
+					add2limit(sd->status.woe_statistics.wrong_support_skills_used, 1, UINT_MAX);
+			}
+		}
+
+
 
 	if (dstmd) { //Mob skill event for no damage skills (damage ones are handled in battle_calc_damage) [Skotlex]
 		mob->log_damage(dstmd, src, 0); //Log interaction (counts as 'attacker' for the exp bonus)
@@ -16677,7 +16703,11 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 {
 	struct skill_condition req;
 
+	int rankFlag = 0;
 	nullpo_ret(sd);
+
+	if (map_allowed_woe(sd->bl.m) && sd->status.guild_id)
+			rankFlag = 1;
 
 	if ((!sd->auto_cast_current.itemskill_check_conditions && sd->auto_cast_current.type == AUTOCAST_ITEM)
 	    || sd->auto_cast_current.type == AUTOCAST_IMPROVISE) {
@@ -16707,28 +16737,20 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 		if(req.hp || req.sp)
 			status_zap(&sd->bl, req.hp, req.sp);
 
-		if (req.spiritball > 0) {
-			switch(skill_id) {
-			case SP_SOULGOLEM:
-			case SP_SOULSHADOW:
-			case SP_SOULFALCON:
-			case SP_SOULFAIRY:
-			case SP_SOULCURSE:
-			case SP_SPA:
-			case SP_SHA:
-			case SP_SWHOO:
-			case SP_SOULUNITY:
-			case SP_SOULDIVISION:
-			case SP_SOULREAPER:
-			case SP_SOULEXPLOSION:
-			case SP_KAUTE:
-				pc->delsoulball(sd, req.spiritball, false);
-				break;
-			default:
-				pc->delspiritball(sd, req.spiritball, 0);
-				break;
-			}
-		}
+				if (req.sp)
+					{
+						if (rankFlag == 1)
+							add2limit(sd->status.woe_statistics.sp_used, req.sp, UINT_MAX);
+					}
+
+					if (req.spiritball > 0)
+					{
+						pc->delspiritball(sd, req.spiritball, 0);
+						if (rankFlag == 1)
+						{
+							add2limit(sd->status.woe_statistics.spiritb_used, req.spiritball, UINT_MAX);
+						}
+					}
 
 
 		if(req.zeny > 0)

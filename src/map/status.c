@@ -235,12 +235,16 @@ static int status_charge(struct block_list *bl, int64 hp, int64 sp)
 	return status->damage(NULL, bl, hp, sp, 0, 3);
 }
 
+int status_damage__(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag) {
+	return status_damage_(src,target, in_hp, in_sp, walkdelay, flag, 0);
+}
+
 //Inflicts damage on the target with the according walkdelay.
 //If flag&1, damage is passive and does not triggers canceling status changes.
 //If flag&2, fail if target does not has enough to subtract.
 //If flag&4, if killed, mob must not give exp/loot.
 //flag will be set to &8 when damaging sp of a dead character
-static int status_damage(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag)
+static int status_damage(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag, int skill_id)
 {
 	struct status_data *st;
 	struct status_change *sc;
@@ -388,6 +392,8 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		case BL_ALL:
 			break;
 	}
+
+	pc->record_damage(src, target, hp);
 
 	if (src != NULL && target->type == BL_PC && BL_UCAST(BL_PC, target)->disguise > 0) {
 		// stop walking when attacked in disguise to prevent walk-delay bug
@@ -14024,7 +14030,9 @@ void status_defaults(void)
 	status->get_sc_type = status_get_sc_type;
 	status->get_sc_icon = status_get_sc_icon;
 
-	status->damage = status_damage;
+	//status->damage = status_damage;
+	status->damage = status_damage__;
+	status->damage_ = status_damage_;
 	//Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
 	status->charge = status_charge;
 	status->percent_change = status_percent_change;

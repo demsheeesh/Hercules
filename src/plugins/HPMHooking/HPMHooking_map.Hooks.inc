@@ -66890,7 +66890,7 @@ void HP_pc_damage(struct map_session_data *sd, struct block_list *src, unsigned 
 	}
 	return;
 }
-int HP_pc_dead(struct map_session_data *sd, struct block_list *src) {
+int HP_pc_dead(struct map_session_data *sd, struct block_list *src, int skill) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_dead_pre > 0) {
@@ -66906,7 +66906,7 @@ int HP_pc_dead(struct map_session_data *sd, struct block_list *src) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.dead(sd, src);
+		retVal___ = HPMHooks.source.pc.dead(sd, src, skill);
 	}
 	if (HPMHooks.count.HP_pc_dead_post > 0) {
 		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct block_list *src);
