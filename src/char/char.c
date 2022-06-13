@@ -561,6 +561,29 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			strcat(save_status, " status2");
 	}
 
+	/* [Sanasol] WoE Statistics */
+	if (memcmp(&p->woe_statistics, &cp->woe_statistics, sizeof(struct s_woestats)))
+	{
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `char_woe_statistics` (`char_id`, `kill_count`, `death_count`, `score`, `top_damage`, `damage_done`, `damage_received`, `emperium_damage`, `guardian_damage`, `barricade_damage`, `gstone_damage`, "
+			"`emperium_kill`, `guardian_kill`, `barricade_kill`, `gstone_kill`, "
+			"`sp_heal_potions`, `hp_heal_potions`, `yellow_gemstones`, `red_gemstones`, `blue_gemstones`, `poison_bottles`, `acid_demostration`, `acid_demostration_fail`, "
+			"`support_skills_used`, `healing_done`, `wrong_support_skills_used`, `wrong_healing_done`, "
+			"`sp_used`, `zeny_used`, `spiritb_used`, `ammo_used`, `date`) "
+			"VALUES ('%d', '%d', '%d', '%d', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%d', '%d', '%d', '%d', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', CURRENT_DATE())",
+			p->char_id, p->woe_statistics.kill_count, p->woe_statistics.death_count, p->woe_statistics.score, p->woe_statistics.top_damage, p->woe_statistics.damage_done, p->woe_statistics.damage_received, p->woe_statistics.emperium_damage, p->woe_statistics.guardian_damage, p->woe_statistics.barricade_damage, p->woe_statistics.gstone_damage,
+			p->woe_statistics.emperium_kill, p->woe_statistics.guardian_kill, p->woe_statistics.barricade_kill, p->woe_statistics.gstone_kill,
+			p->woe_statistics.sp_heal_potions, p->woe_statistics.hp_heal_potions, p->woe_statistics.yellow_gemstones, p->woe_statistics.red_gemstones, p->woe_statistics.blue_gemstones, p->woe_statistics.poison_bottles, p->woe_statistics.acid_demostration, p->woe_statistics.acid_demostration_fail,
+			p->woe_statistics.support_skills_used, p->woe_statistics.healing_done, p->woe_statistics.wrong_support_skills_used, p->woe_statistics.wrong_healing_done,
+			p->woe_statistics.sp_used, p->woe_statistics.zeny_used, p->woe_statistics.spiritb_used, p->woe_statistics.ammo_used))
+		{
+			Sql_ShowDebug(inter->sql_handle);
+			errors++;
+		}
+		else
+			strcat(save_status, " woestats");
+	}
+	/* [Sanasol] WoE Statistics */
+
 	/* Mercenary Owner */
 	if( (p->mer_id != cp->mer_id) ||
 		(p->arch_calls != cp->arch_calls) || (p->arch_faith != cp->arch_faith) ||
@@ -1432,6 +1455,47 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	}
 	strcat(t_msg, " hotkeys");
 #endif
+
+	/* [Sanasol] Current WoE Statistics */
+	if (SQL_ERROR == SqlStmt_Prepare(stmt, "SELECT `top_damage`, `damage_done`, `damage_received`, `emperium_damage`, `guardian_damage`, `barricade_damage`, `gstone_damage`, `emperium_kill`, `guardian_kill`, `barricade_kill`, `gstone_kill`, `sp_heal_potions`, `hp_heal_potions`, `yellow_gemstones`, `red_gemstones`, `blue_gemstones`, `poison_bottles`, `acid_demostration`, `acid_demostration_fail`, `support_skills_used`, `healing_done`, `wrong_support_skills_used`, `wrong_healing_done`, `sp_used`, `zeny_used`, `spiritb_used`, `ammo_used`, `kill_count`, `death_count`, `score` FROM `char_woe_statistics` WHERE `char_id` = ? and `date`=CURRENT_DATE()")
+		|| SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, 0)
+		|| SQL_ERROR == SQL->StmtExecute(stmt)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_UINT, &p->woe_statistics.top_damage, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_UINT, &p->woe_statistics.damage_done, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_UINT, &p->woe_statistics.damage_received, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 3, SQLDT_UINT, &p->woe_statistics.emperium_damage, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 4, SQLDT_UINT, &p->woe_statistics.guardian_damage, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 5, SQLDT_UINT, &p->woe_statistics.barricade_damage, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 6, SQLDT_UINT, &p->woe_statistics.gstone_damage, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 7, SQLDT_USHORT, &p->woe_statistics.emperium_kill, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 8, SQLDT_USHORT, &p->woe_statistics.guardian_kill, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 9, SQLDT_USHORT, &p->woe_statistics.barricade_kill, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 10, SQLDT_USHORT, &p->woe_statistics.gstone_kill, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 11, SQLDT_UINT, &p->woe_statistics.sp_heal_potions, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 12, SQLDT_UINT, &p->woe_statistics.hp_heal_potions, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 13, SQLDT_UINT, &p->woe_statistics.yellow_gemstones, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 14, SQLDT_UINT, &p->woe_statistics.red_gemstones, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 15, SQLDT_UINT, &p->woe_statistics.blue_gemstones, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 16, SQLDT_UINT, &p->woe_statistics.poison_bottles, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 17, SQLDT_UINT, &p->woe_statistics.acid_demostration, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 18, SQLDT_UINT, &p->woe_statistics.acid_demostration_fail, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 19, SQLDT_UINT, &p->woe_statistics.support_skills_used, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 20, SQLDT_UINT, &p->woe_statistics.healing_done, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 21, SQLDT_UINT, &p->woe_statistics.wrong_support_skills_used, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 22, SQLDT_UINT, &p->woe_statistics.wrong_healing_done, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 23, SQLDT_UINT, &p->woe_statistics.sp_used, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 24, SQLDT_UINT, &p->woe_statistics.zeny_used, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 25, SQLDT_UINT, &p->woe_statistics.spiritb_used, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 26, SQLDT_UINT, &p->woe_statistics.ammo_used, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 27, SQLDT_USHORT, &p->woe_statistics.kill_count, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 28, SQLDT_USHORT, &p->woe_statistics.death_count, 0, NULL, NULL)
+		|| SQL_ERROR == SQL->StmtBindColumn(stmt, 29, SQLDT_USHORT, &p->woe_statistics.score, 0, NULL, NULL)
+		|| SQL_SUCCESS != SQL->StmtNextRow(stmt))
+	{
+		p->woe_statistics.score = 2000;
+	}
+	strcat(t_msg, " woestats");
+	/* [Sanasol] Current WoE Statistics */
 
 	/* Mercenary Owner DataBase */
 	inter_mercenary->owner_fromsql(char_id, p);

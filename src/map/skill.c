@@ -3346,7 +3346,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 		struct block_list *nbl;
 		nbl = battle->get_enemy_area(bl,bl->x,bl->y,2,BL_CHAR,bl->id);
 		if (nbl) { // Only one target is chosen.
-			clif->skill_damage(bl, nbl, tick, status_get_amotion(src), 0, status_fix_damage(bl,nbl,damage * skill_lv / 10,0), 1, OB_OBOROGENSOU_TRANSITION_ATK, -1, BDT_SKILL);
+			clif->skill_damage(bl, nbl, tick, status_get_amotion(src), 0, status_fix_damage(bl,nbl,damage * skill_lv / 10,0, skill_id), 1, OB_OBOROGENSOU_TRANSITION_ATK, -1, BDT_SKILL);
 		}
 	}
 
@@ -7850,7 +7850,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			                    src, skill_id, skill_lv, tick, flag|targetmask,
 			                    skill->castend_damage_id);
 			map->addblock(src);
-			status->damage(src, src, sstatus->max_hp,0,0,1);
+			status->damage_(src, src, sstatus->max_hp,0,0,1,skill_id);
 		}
 			break;
 
@@ -9376,14 +9376,14 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 						sc_start(src,bl,SC_CONFUSION,100,skill_lv,skill->get_time2(skill_id,skill_lv));
 						break;
 					case 10: // 6666 damage, atk matk halved, cursed
-						status_fix_damage(src, bl, 6666, 0);
+						status_fix_damage(src, bl, 6666, 0, skill_id);
 						clif->damage(src,bl,0,0,6666,0,BDT_NORMAL,0);
 						sc_start(src,bl,SC_INCATKRATE,100,-50,skill->get_time2(skill_id,skill_lv));
 						sc_start(src,bl,SC_INCMATKRATE,100,-50,skill->get_time2(skill_id,skill_lv));
 						sc_start(src,bl,SC_CURSE,skill_lv,100,skill->get_time2(skill_id,skill_lv));
 						break;
 					case 11: // 4444 damage
-						status_fix_damage(src, bl, 4444, 0);
+						status_fix_damage(src, bl, 4444, 0, skill_id);
 						clif->damage(src,bl,0,0,4444,0,BDT_NORMAL,0);
 						break;
 					case 12: // stun
@@ -10917,7 +10917,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					madnesscheck = map->foreachinrange(skill->area_sub, src, skill->get_splash(skill_id,skill_lv),BL_PC, src, skill_id, skill_lv, tick, flag|BCT_ENEMY, skill->area_sub_count);
 				sc_start(src, bl, type, 100, skill_lv,skill->get_time(skill_id, skill_lv));
 				if ( madnesscheck >= 8 )//The god of madness deals 9999 fixed unreduceable damage when 8 or more enemy players are affected.
-					status_fix_damage(src, bl, 9999, clif->damage(src, bl, 0, 0, 9999, 0, BDT_NORMAL, 0));
+					status_fix_damage(src, bl, 9999, clif->damage(src, bl, 0, 0, 9999, 0, BDT_NORMAL, 0), skill_id);
 					//skill->attack(BF_MISC,src,src,bl,skillid,skilllv,tick,flag);//To renable when I can confirm it deals damage like this. Data shows its dealt as reflected damage which I don't have it coded like that yet. [Rytech]
 			} else if( sd ) {
 				int rate = sstatus->int_ / 6 + (sd? sd->status.job_level:0) / 5 + skill_lv * 4;
@@ -16738,6 +16738,9 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 			if( sd->status.zeny < req.zeny )
 				req.zeny = sd->status.zeny;
 			pc->payzeny(sd,req.zeny,LOG_TYPE_CONSUME,NULL);
+
+			if (rankFlag == 1)
+				add2limit(sd->status.woe_statistics.zeny_used, req.zeny, UINT_MAX);
 		}
 	}
 
@@ -16789,6 +16792,26 @@ static int skill_consume_requirement(struct map_session_data *sd, uint16 skill_i
 
 			if ((n = pc->search_inventory(sd,req.itemid[i])) != INDEX_NOT_FOUND)
 				pc->delitem(sd, n, req.amount[i], 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
+
+			if (rankFlag == 1)
+			{
+				switch (req.itemid[i])
+				{
+					case ITEMID_POISON_BOTTLE:
+						add2limit(sd->status.woe_statistics.poison_bottles, req.amount[i], UINT_MAX);
+						break;
+					case ITEMID_YELLOW_GEMSTONE:
+						add2limit(sd->status.woe_statistics.yellow_gemstones, req.amount[i], UINT_MAX);
+						break;
+					case ITEMID_RED_GEMSTONE:
+						add2limit(sd->status.woe_statistics.red_gemstones, req.amount[i], UINT_MAX);
+						break;
+					case ITEMID_BLUE_GEMSTONE:
+						add2limit(sd->status.woe_statistics.blue_gemstones, req.amount[i], UINT_MAX);
+						break;
+				}
+			}
+
 		}
 	}
 

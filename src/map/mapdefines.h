@@ -103,6 +103,8 @@
 // No ViewID
 #define map_no_view(m, view) (map->list[m].flag.noviewid & (view))
 
+#define map_allowed_woe(m) (map->agit_flag && map->list[m].flag.gvg && map->list[m].flag.gvg_castle)
+
 // For common mapforeach calls. Since pets cannot be affected, they aren't included here yet.
 #define BL_CHAR (BL_PC|BL_MOB|BL_HOM|BL_MER|BL_ELEM)
 

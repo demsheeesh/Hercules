@@ -408,7 +408,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 	//&2: Also remove object from map.
 	//&4: Also delete object from memory.
 	switch (target->type) {
-		case BL_PC:  flag = pc->dead(BL_UCAST(BL_PC, target), src); break;
+		case BL_PC:  flag = pc->dead(BL_UCAST(BL_PC, target), src, skill_id); break;
 		case BL_MOB: flag = mob->dead(BL_UCAST(BL_MOB, target), src, (flag&4) ? 3 : 0); break;
 		case BL_HOM: flag = homun->dead(BL_UCAST(BL_HOM, target)); break;
 		case BL_MER: flag = mercenary->dead(BL_UCAST(BL_MER, target)); break;
@@ -10979,7 +10979,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 				struct block_list* src = map->id2bl(sce->val2);
 				if (tid == INVALID_TIMER || src == NULL)
 					break; // Terminated by Damage
-				status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,0,0,400*sce->val1,0,BDT_NORMAL,0));
+				status_fix_damage(src,bl,400*sce->val1,clif->damage(bl,bl,0,0,400*sce->val1,0,BDT_NORMAL,0), 0);
 			}
 			break;
 		case SC_WUGDASH:
@@ -11837,7 +11837,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 					mob->log_damage(BL_UCAST(BL_MOB, bl), src, sd != NULL || hp < st->hp ? hp : st->hp-1);
 				}
 				map->freeblock_lock();
-				status_fix_damage(src, bl, sd||hp<st->hp?hp:st->hp-1, 1);
+				status_fix_damage(src, bl, sd||hp<st->hp?hp:st->hp-1, 1, 0);
 				if( sc->data[type] ) {
 					if( st->hp == 1 ) {
 						map->freeblock_unlock();
@@ -12024,7 +12024,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			if( --(sce->val4) > 0 ) {
 				map->freeblock_lock();
 				clif->damage(bl,bl,status_get_amotion(bl),status_get_dmotion(bl)+500,100,0,BDT_NORMAL,0);
-				status_fix_damage(NULL,bl,100,0);
+				status_fix_damage(NULL,bl,100,0, 0);
 				if( sc->data[type] ) {
 					sc_timer_next(3000+tick,status->change_timer,bl->id,data);
 				}
@@ -12356,7 +12356,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 				int damage = st->max_hp / 100; // Suggestion 1% each second
 				if( damage >= st->hp ) damage = st->hp - 1; // Do not kill, just keep you with 1 hp minimum
 				map->freeblock_lock();
-				status_fix_damage(NULL,bl,damage,clif->damage(bl,bl,0,0,damage,0,BDT_NORMAL,0));
+				status_fix_damage(NULL,bl,damage,clif->damage(bl,bl,0,0,damage,0,BDT_NORMAL,0), 0);
 				if( sc->data[type] ) {
 					sc_timer_next(1000 + tick, status->change_timer, bl->id, data);
 				}

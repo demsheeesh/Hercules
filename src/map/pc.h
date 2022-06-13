@@ -1080,7 +1080,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*skillheal2_bonus) (struct map_session_data *sd, uint16 skill_id);
 
 	void (*damage) (struct map_session_data *sd,struct block_list *src,unsigned int hp, unsigned int sp);
-	int (*dead) (struct map_session_data *sd,struct block_list *src);
+	int (*dead) (struct map_session_data *sd,struct block_list *src, int skill_id);
 	void (*revive) (struct map_session_data *sd,unsigned int hp, unsigned int sp);
 	void (*heal) (struct map_session_data *sd,unsigned int hp,unsigned int sp, int type);
 	int (*itemheal) (struct map_session_data *sd,int itemid, int hp,int sp);

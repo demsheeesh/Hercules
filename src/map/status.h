@@ -1217,9 +1217,9 @@ struct status_change {
 	struct status_change_entry *data[SC_MAX];
 };
 
-
 //Define for standard HP damage attacks.
-#define status_fix_damage(src, target, hp, walkdelay) (status->damage((src), (target), (hp), 0, (walkdelay), 0))
+#define status_fix_damage(src, target, hp, walkdelay, skill_id) (status->damage_((src), (target), (hp), 0, (walkdelay), 0, (skill_id)))
+
 //Define for standard HP/SP damage triggers.
 #define status_zap(bl, hp, sp) (status->damage(NULL, (bl), (hp), (sp), 0, 1))
 //Easier handling of status->percent_change

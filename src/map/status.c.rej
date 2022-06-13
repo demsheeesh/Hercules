@@ -1,0 +1,38 @@
+diff a/src/map/status.c b/src/map/status.c	(rejected hunks)
+@@ -1282,12 +1282,16 @@ int status_charge(struct block_list* bl, int64 hp, int64 sp) {
+ 	return status->damage(NULL, bl, hp, sp, 0, 3);
+ }
+ 
++int status_damage__(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag) {
++	return status_damage_(src,target, in_hp, in_sp, walkdelay, flag, 0);
++}
++
+ //Inflicts damage on the target with the according walkdelay.
+ //If flag&1, damage is passive and does not triggers canceling status changes.
+ //If flag&2, fail if target does not has enough to subtract.
+ //If flag&4, if killed, mob must not give exp/loot.
+ //flag will be set to &8 when damaging sp of a dead character
+-int status_damage(struct block_list *src,struct block_list *target,int64 in_hp, int64 in_sp, int walkdelay, int flag) {
++int status_damage_(struct block_list *src,struct block_list *target,int64 in_hp, int64 in_sp, int walkdelay, int flag, int skill_id) {
+ 	struct status_data *st;
+ 	struct status_change *sc;
+ 	int hp,sp;
+@@ -1424,6 +1428,8 @@ int status_damage(struct block_list *src,struct block_list *target,int64 in_hp,
+ 		case BL_ELEM: elemental->heal(BL_UCAST(BL_ELEM, target), hp, sp); break;
+ 	}
+ 
++	pc->record_damage(src, target, hp);
++
+ 	if (src != NULL && target->type == BL_PC && BL_UCAST(BL_PC, target)->disguise > 0) {
+ 		// stop walking when attacked in disguise to prevent walk-delay bug
+ 		unit->stop_walking(target, STOPWALKING_FLAG_FIXPOS);
+@@ -13104,7 +13110,8 @@ void status_defaults(void) {
+ 	status->type2relevant_bl_types = status_type2relevant_bl_types;
+ 	status->get_sc_type = status_get_sc_type;
+ 
+-	status->damage = status_damage;
++	status->damage = status_damage__;
++	status->damage_ = status_damage_;
+ 	//Define for standard HP/SP skill-related cost triggers (mobs require no HP/SP to use skills)
+ 	status->charge = status_charge;
+ 	status->percent_change = status_percent_change;

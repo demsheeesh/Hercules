@@ -3474,7 +3474,7 @@ static int clif_hpmeter_sub(struct block_list *bl, va_list ap)
 	if( !pc_has_permission(tsd, PC_PERM_VIEW_HPMETER) )
 		return 0;
 
-	clif->hpmeter_single(tsd->fd, sd->status.account_id, sd->battle_status.hp, sd->battle_status.max_hp, sd->battle_status.sp, sd->battle_status.max_sp); 
+	clif->hpmeter_single(tsd->fd, sd->status.account_id, sd->battle_status.hp, sd->battle_status.max_hp, sd->battle_status.sp, sd->battle_status.max_sp);
 	return 0;
 }
 
@@ -5083,6 +5083,8 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 	damage2 = (int)min(in_damage2,INT_MAX);
 #endif
 
+	pc_record_maxdamage(src, dst, damage + damage2);
+
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
 
 	p.PacketType = damageType;
@@ -5859,6 +5861,25 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 		if (sc->data[SC_ILLUSION] != NULL && damage != 0)
 			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
 	}
+		pc_record_maxdamage(src, dst, damage);
+		sd = BL_CAST(BL_PC, src);
+		if (sd && skill_id == CR_ACIDDEMONSTRATION)
+		{
+			if (damage > 0)
+			{
+				if (sd->status.guild_id && map_allowed_woe(src->m))
+				{
+					add2limit(sd->status.woe_statistics.acid_demostration, 1, UINT32_MAX);
+				}
+			}
+			else
+			{
+				if (sd->status.guild_id && map_allowed_woe(src->m))
+				{
+					add2limit(sd->status.woe_statistics.acid_demostration_fail, 1, UINT32_MAX);
+				}
+			}
+		}
 
 	struct PACKET_ZC_NOTIFY_SKILL p = { 0 };
 	p.PacketType = HEADER_ZC_NOTIFY_SKILL;
@@ -9584,7 +9605,7 @@ static void clif_refresh(struct map_session_data *sd)
 	clif->updatestatus(sd,SP_INT);
 	clif->updatestatus(sd,SP_DEX);
 	clif->updatestatus(sd,SP_LUK);
-	
+
 	// Resume some options that are still ticking after refreshed e.g: SC_BLIND [KeiKun]
 	if (sd->sc.opt2 != 0)
 		clif->changeoption(&sd->bl);
@@ -18543,7 +18564,7 @@ static void clif_bossmapinfo(int fd, struct mob_data *md, enum bossmap_info_type
 
 	switch (flag) {
 	case BOSS_INFO_NONE:
-		break; 
+		break;
 	case BOSS_INFO_ALIVE:
 	case BOSS_INFO_ALIVE_WITHMSG:
 		if (md != NULL) {

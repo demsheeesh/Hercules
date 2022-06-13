@@ -230,6 +230,19 @@ static void log_pick_pc(struct map_session_data *sd, e_log_pick_type type, int a
 	nullpo_retv(itm);
 	log_pick(sd->status.char_id, sd->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
+int log_woe_kill(struct map_session_data *ssd, struct map_session_data *tsd, int skill)
+{
+	char esc_sname[NAME_LENGTH * 2 + 1];
+	char esc_tname[NAME_LENGTH * 2 + 1];
+
+	SQL->EscapeStringLen(logs->mysql_handle, esc_sname, ssd->status.name, strnlen(ssd->status.name, NAME_LENGTH));
+	SQL->EscapeStringLen(logs->mysql_handle, esc_tname, tsd->status.name, strnlen(tsd->status.name, NAME_LENGTH));
+
+	if (SQL_ERROR == SQL->Query(logs->mysql_handle, "INSERT DELAYED INTO `char_woe_kills` (`time`,`killer`,`killer_id`,`killed`,`killed_id`,`map`,`skill`) VALUES (NOW(), '%s', '%d', '%s', '%d', '%s', '%d')", esc_sname, ssd->status.char_id, esc_tname, tsd->status.char_id, map->list[tsd->bl.m].name, skill))
+		Sql_ShowDebug(logs->mysql_handle);
+
+	return 0;
+}
 
 /// logs item transactions (monsters)
 static void log_pick_mob(struct mob_data *md, e_log_pick_type type, int amount, struct item *itm, struct item_data *data)
@@ -816,4 +829,6 @@ void log_defaults(void)
 	logs->picktype2char = log_picktype2char;
 	logs->chattype2char = log_chattype2char;
 	logs->should_log_item = should_log_item;
+
+	logs->woe_kill = log_woe_kill;
 }

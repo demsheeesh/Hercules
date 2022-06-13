@@ -759,6 +759,45 @@ struct hotkey {
 #endif
 };
 
+struct s_woestats {
+	int score;
+	unsigned short
+		kill_count,
+		death_count;
+	unsigned int
+		top_damage,
+		damage_done,
+		damage_received;
+	unsigned int
+		emperium_damage,
+		guardian_damage,
+		barricade_damage,
+		gstone_damage;
+	unsigned short
+		emperium_kill,
+		guardian_kill,
+		barricade_kill,
+		gstone_kill;
+	unsigned int // Ammo
+		sp_heal_potions,
+		hp_heal_potions,
+		yellow_gemstones,
+		red_gemstones,
+		blue_gemstones,
+		poison_bottles,
+		acid_demostration,
+		acid_demostration_fail,
+		support_skills_used,
+		healing_done,
+		wrong_support_skills_used,
+		wrong_healing_done,
+		sp_used,
+		zeny_used,
+		spiritb_used,
+		ammo_used;
+};
+
+
 struct achievement { // Achievements [Smokexyz/Hercules]
 	int id;
 	int objective[MAX_ACHIEVEMENT_OBJECTIVES];
@@ -821,6 +860,7 @@ struct mmo_charstatus {
 	uint16 mapport;
 
 	int64 last_login;
+	struct s_woestats woe_statistics;
 	struct point last_point,save_point,memo_point[MAX_MEMOPOINTS];
 	int inventorySize;
 	struct item inventory[MAX_INVENTORY],cart[MAX_CART];

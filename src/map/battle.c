@@ -275,7 +275,8 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 			    && (dat->skill_id == MO_EXTREMITYFIST || (target->m == src->m && check_distance_bl(src, target, dat->distance))))
 			)) {
 				map->freeblock_lock();
-				status_fix_damage(src, target, dat->damage, dat->delay);
+				//status_fix_damage(src, target, dat->damage, dat->delay);
+				status_fix_damage(src, target, dat->damage, dat->delay, dat->skill_id);
 				if (dat->attack_type && !status->isdead(target) && dat->additional_effects)
 					skill->additional_effect(src,target,dat->skill_id,dat->skill_lv,dat->attack_type,dat->dmg_lv,tick);
 				if (dat->dmg_lv > ATK_BLOCK && dat->attack_type)
@@ -284,7 +285,8 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 			} else if (src == NULL && dat->skill_id == CR_REFLECTSHIELD) {
 				// it was monster reflected damage, and the monster died, we pass the damage to the character as expected
 				map->freeblock_lock();
-				status_fix_damage(target, target, dat->damage, dat->delay);
+				//status_fix_damage(target, target, dat->damage, dat->delay);
+				status_fix_damage(target, target, dat->damage, dat->delay, dat->skill_id);
 				map->freeblock_unlock();
 			}
 		}
@@ -323,7 +325,8 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 
 	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
 		map->freeblock_lock();
-		status_fix_damage(src, target, damage, ddelay); // We have to separate here between reflect damage and others [icescope]
+		//status_fix_damage(src, target, damage, ddelay); // We have to separate here between reflect damage and others [icescope]
+		status_fix_damage(src, target, damage, ddelay, skill_id); // We have to seperate here between reflect damage and others [icescope]
 		if( attack_type && !status->isdead(target) && additional_effects )
 			skill->additional_effect(src, target, skill_id, skill_lv, attack_type, dmg_lv, timer->gettick());
 		if( dmg_lv > ATK_BLOCK && attack_type )
@@ -3754,7 +3757,14 @@ static void battle_consume_ammo(struct map_session_data *sd, int skill_id, int l
 	}
 
 	if(sd->equip_index[EQI_AMMO]>=0) //Qty check should have been done in skill_check_condition
-		pc->delitem(sd, sd->equip_index[EQI_AMMO], qty, 0, DELITEM_SKILLUSE, LOG_TYPE_CONSUME);
+	{
+		pc_delitem(sd, sd->equip_index[EQI_AMMO], qty, 0, 1, LOG_TYPE_CONSUME);
+
+		if (sd->status.guild_id && map_allowed_woe(sd->bl.m))
+		{
+			add2limit(sd->status.woe_statistics.ammo_used, qty, UINT_MAX);
+		}
+	}
 
 	sd->state.arrow_atk = 0;
 }
@@ -5645,7 +5655,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				&& skill_id != NPC_GRANDDARKNESS
 				&& skill_id != PA_SHIELDCHAIN
 				&& skill_id != KO_HAPPOKUNAI
-#ifndef RENEWAL			
+#ifndef RENEWAL
 				&& !flag.cri
 #endif
 			) {
@@ -6034,7 +6044,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	 && rnd()%100 < tsc->data[SC_SWORDREJECT]->val2
 	) {
 		ATK_RATER(50);
-		status_fix_damage(target,src,wd.damage,clif->damage(target,src,0,0,wd.damage,0,BDT_NORMAL,0));
+		status_fix_damage(target,src,wd.damage,clif->damage(target,src,0,0,wd.damage,0,BDT_NORMAL,0), 0);
 		clif->skill_nodamage(target,target,ST_REJECTSWORD,tsc->data[SC_SWORDREJECT]->val1,1);
 		if( --(tsc->data[SC_SWORDREJECT]->val3) <= 0 )
 			status_change_end(target, SC_SWORDREJECT, INVALID_TIMER);
@@ -6442,7 +6452,8 @@ static int battle_damage_area(struct block_list *bl, va_list ap)
 		if( amotion )
 			battle->delay_damage(tick, amotion,src,bl,0,CR_REFLECTSHIELD,0,damage,ATK_DEF,0,true);
 		else
-			status_fix_damage(src,bl,damage,0);
+					//status_fix_damage(src,bl,damage,0);
+					status_fix_damage(src, bl, damage, 0, 0);
 		clif->damage(bl,bl,amotion,dmotion,damage,1,BDT_ENDURE,0);
 		if (src->type != BL_PC || BL_UCCAST(BL_PC, src)->auto_cast_current.type != AUTOCAST_TEMP)
 			skill->additional_effect(src, bl, CR_REFLECTSHIELD, 1, BF_WEAPON|BF_SHORT|BF_NORMAL,ATK_DEF,tick);
@@ -6698,7 +6709,8 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 			 && check_distance_bl(target, d_bl, sce->val3)
 			) {
 				clif->damage(d_bl, d_bl, 0, 0, damage, 0, BDT_NORMAL, 0);
-				status_fix_damage(NULL, d_bl, damage, 0);
+				//status_fix_damage(NULL, d_bl, damage, 0);
+				status_fix_damage(NULL, d_bl, damage, 0, 0);
 			} else {
 				status_change_end(target, SC_DEVOTION, INVALID_TIMER);
 			}

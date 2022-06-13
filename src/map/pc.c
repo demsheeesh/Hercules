@@ -3918,7 +3918,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 				ShowWarning("pc_bonus2: SP_ADD_DROP_RACE: Invalid Race (%d)\n", type2);
 				break;
 			}
-			if (sd->state.lr_flag == 2) 
+			if (sd->state.lr_flag == 2)
 				break;
 			BONUS_FOREACH_RCARRAY_FROMMASK(i, race_mask)
 				sd->dropaddrace[i] += val;
@@ -8019,7 +8019,7 @@ static int pc_sub_skillatk_bonus(struct map_session_data *sd, uint16 skill_id)
 	nullpo_ret(sd);
 
 	ARR_FIND(0, ARRAYLENGTH(sd->subskill), i, sd->subskill[i].id == skill_id);
-	
+
 	if (i < ARRAYLENGTH(sd->subskill))
 		bonus = sd->subskill[i].val;
 
@@ -8991,6 +8991,9 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 		if( sd->sc.data[SC_HEALPLUS] )
 			hp += (int)(hp * sd->sc.data[SC_HEALPLUS]->val1/100.);
 
+		if (sd->status.guild_id && map_allowed_woe(sd->bl.m))
+			add2limit(sd->status.woe_statistics.hp_heal_potions, 1, UINT_MAX);
+
 		// 2014 Halloween Event : Pumpkin Bonus
 		if ( sd->sc.data[SC_MTF_PUMPKIN] && itemid == ITEMID_PUMPKIN )
 			hp += (int)(hp * sd->sc.data[SC_MTF_PUMPKIN]->val1/100);
@@ -9009,6 +9012,9 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 		tmp = sp*bonus/100;
 		if(bonus != 100 && tmp > sp)
 			sp = tmp;
+
+		if (sd->status.guild_id && map_allowed_woe(sd->bl.m))
+			add2limit(sd->status.woe_statistics.sp_heal_potions, 1, UINT_MAX);
 	}
 	if( sd->sc.count ) {
 		if ( sd->sc.data[SC_CRITICALWOUND] ) {
@@ -9037,7 +9043,7 @@ static int pc_itemheal(struct map_session_data *sd, int itemid, int hp, int sp)
 		if (sd->sc.data[SC_BITESCAR]) {
 			hp = 0;
 		}
-		
+
 		if (sd->sc.data[SC_NO_RECOVER_STATE]) {
 			hp = 0;
 			sp = 0;
@@ -12019,7 +12025,7 @@ static bool pc_read_attr_fix_db(void)
 				battle->attr_fix_table[i][j][k] = 100;
 		}
 	}
-	
+
 	char filepath[256];
 	libconfig->format_db_path(DBPATH"attr_fix.conf", filepath, sizeof(filepath));
 
@@ -12059,7 +12065,7 @@ static bool pc_read_attr_fix_db(void)
 #endif // ENABLE_CASE_CHECK
 
 	libconfig->destroy(&attr_fix_conf);
-	
+
 	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
 	return true;
 }
@@ -12105,7 +12111,7 @@ static int pc_readdb(void)
 	// reset then read statspoint
 	memset(pc->statp,0,sizeof(pc->statp));
 	int i = 1;
-	
+
 	char line[24000];
 	sprintf(line, "%s/"DBPATH"statpoint.txt", map->db_path);
 	FILE *fp = fopen(line, "r");

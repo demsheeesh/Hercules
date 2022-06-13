@@ -2976,6 +2976,8 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			}
 		}
 
+		pc_record_mobkills(sd, md);
+
 		if( sd ) {
 			if( sd->mission_mobid == md->class_) { //TK_MISSION [Skotlex]
 				if (++sd->mission_count >= 100 && (temp = mob->get_random_id(0, 0xE, sd->status.base_level)) != 0) {

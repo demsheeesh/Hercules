@@ -106,4 +106,22 @@ void HCache_defaults(void);
 
 HPShared struct HCache_interface *HCache;
 
+#define add2limit(a, b, max) \
+	do { \
+		if( (max - a) < b ) { \
+			a = max; \
+		} else { \
+			a += b; \
+		} \
+	} while(0)
+
+#define sub2limit(a, b, min) \
+	do { \
+		if( (b + min) > a ) { \
+			a = min; \
+		} else { \
+			a -= b; \
+		} \
+	} while(0)
+
 #endif /* COMMON_UTILS_H */
