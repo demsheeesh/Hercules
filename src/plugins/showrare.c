@@ -29,7 +29,7 @@ HPExport struct hplugin_info pinfo = {
 	HPM_VERSION,
 };
 
-int announce_this_when_the_drop_rate_is_below_this_value = 1000; // set this, please don't mind the long name as I heard the limit is 2048 characters (not sure)... and I don't think anyone makes a long variable name over 200 characters anyway
+int announce_this_when_the_drop_rate_is_below_this_value = 400; // set this, please don't mind the long name as I heard the limit is 2048 characters (not sure)... and I don't think anyone makes a long variable name over 200 characters anyway
 
 struct map_session_data *killer;
 

@@ -33,7 +33,7 @@
 #                                                                    #
 # Note: DO NOT include the .c extension!!!                           #
 
-MYPLUGINS := $(MYPLUGINS) ExtendedBG ExtendedBG-char koe showrare partybuff checkresist
+MYPLUGINS := $(MYPLUGINS) ExtendedBG ExtendedBG-char koe showrare
 
 #                                                                    #
 #########  DO NOT EDIT ANYTHING BELOW THIS LINE!!!  ##################

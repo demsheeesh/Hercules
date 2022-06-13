@@ -3,7 +3,7 @@ set $@blvl,99;// max lvl of your server
 set $@jlvl,70;// max job lvl of your server
 set $@jlvl2,50;// max job lvl of your server
 set $@jlvl3,99;// max job lvl of your server
-	if( Class != 0 && BaseLevel!= 1) goto zzzz;
+	if( Class != 0 && (BaseLevel > 1) && (JobLevel > 1)) goto zzzz;
 		mes "you can job change to any job in an instant";
 		mes "you can choose to be a rebirth class right away";
 		next;
@@ -16,6 +16,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4008;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+		set SkillPoint,127;
 		resetskill;
 		resetstatus;
 		percentheal 100,100;
@@ -25,7 +26,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4009;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
-
+set SkillPoint,127;
 		resetskill;
 		resetstatus;
 		percentheal 100,100;
@@ -35,6 +36,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4010;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -45,6 +47,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4011;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -55,6 +58,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4012;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -65,6 +69,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4013;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -75,6 +80,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4015;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -85,6 +91,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4016;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -95,6 +102,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4017;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -105,6 +113,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4018;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -115,6 +124,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4019;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -125,6 +135,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4020;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 
 		resetskill;
 		resetstatus;
@@ -135,6 +146,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 4021;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,127;
 		resetskill;
 		resetstatus;
 		percentheal 100,100;
@@ -144,6 +156,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 			jobchange 4046;
 			set BaseLevel,$@blvl;
 			set JobLevel,$@jlvl2;
+			set SkillPoint,58;
 			resetskill;
 			resetstatus;
 			percentheal 100,100;
@@ -153,6 +166,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 				jobchange 4047;
 				set BaseLevel,$@blvl;
 				set JobLevel,$@jlvl2;
+				set SkillPoint,107;
 				resetskill;
 				resetstatus;
 				percentheal 100,100;
@@ -162,6 +176,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 					jobchange 4049;
 					set BaseLevel,$@blvl;
 					set JobLevel,$@jlvl2;
+					set SkillPoint,107;
 					resetskill;
 					resetstatus;
 					percentheal 100,100;
@@ -171,6 +186,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 24;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+set SkillPoint,78;
 		resetskill;
 		resetstatus;
 		percentheal 100,100;
@@ -180,6 +196,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 25;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl;
+		set SkillPoint,78;
 		resetskill;
 		resetstatus;
 		percentheal 100,100;
@@ -189,6 +206,7 @@ switch(select("Lord Knight","High Priest","High Wizard","Whitesmith","Sniper","A
 		jobchange 23;
 		set BaseLevel,$@blvl;
 		set JobLevel,$@jlvl3;
+		set SkillPoint,58;
 		resetskill;
 		resetstatus;
 		percentheal 100,100;

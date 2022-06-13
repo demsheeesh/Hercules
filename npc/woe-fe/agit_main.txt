@@ -105,7 +105,7 @@ OnAgitBreak:
 	// Show and log error if an unguilded player breaks the Emperium. (Should NEVER happen)
 	if (.@GID <= 0) {
 		.@notice$ = "Character "+strcharinfo(PC_NAME)+" ("+getcharid(CHAR_ID_CHAR)+") broke the Emperium in Castle: "+strnpcinfo(NPC_NAME_HIDDEN)+" while guildless. No data will be saved and Emperium respawned.";
-		logmes .@notice$; 
+		logmes .@notice$;
 		consolemes(CONSOLEMES_NOTICE, .@notice$);
 		donpcevent "Agit#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnStartArena";
 		end;
@@ -1126,6 +1126,35 @@ OnGuardianDied:
 -	script	Gld_Trea_Spawn::Gld_Trea_Spawn	FAKE_NPC,{
 	end;
 
+
+OnClock0002:
+		// Do nothing if this script is the template.
+		if (strnpcinfo(NPC_NAME_VISIBLE) == "Gld_Trea_Spawn") end;
+
+		.@GID = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),1);
+
+		// If there is no owner, do nothing.
+		if (!.@GID) end;
+
+		// Apply investment to Eco. and Def. Only happens if there were investments made.
+		// Permanent Development can only happen once per day.
+		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4)) {
+			.@Economy = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),2);
+			setcastledata strnpcinfo(NPC_NAME_HIDDEN),2,.@Economy + getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4) + (rand(2) && getgdskilllv(.@GID,10014));
+			if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),2) > 100) setcastledata strnpcinfo(NPC_NAME_HIDDEN),2,100;
+		}
+		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5)) {
+			.@defence = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),3);
+			setcastledata strnpcinfo(NPC_NAME_HIDDEN),3,.@defence + getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5);
+			if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),3) > 100) setcastledata strnpcinfo(NPC_NAME_HIDDEN),3,100;
+		}
+		// Reset daily investment limits.
+		setcastledata strnpcinfo(NPC_NAME_HIDDEN),4,0;
+		setcastledata strnpcinfo(NPC_NAME_HIDDEN),5,0;
+		end;
+
+	OnInit:
+
 OnClock0001:
 	// Do nothing if this script is the template.
 	if (strnpcinfo(NPC_NAME_VISIBLE) == "Gld_Trea_Spawn") end;
@@ -1244,21 +1273,6 @@ OnClock0001:
 		end;
 	}
 
-	// Apply investment to Eco. and Def. Only happens if there were investments made.
-	// Permanent Development can only happen once per day.
-	if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4)) {
-		.@Economy = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),2);
-		setcastledata strnpcinfo(NPC_NAME_HIDDEN),2,.@Economy + getcastledata(strnpcinfo(NPC_NAME_HIDDEN),4) + (rand(2) && getgdskilllv(.@GID,10014));
-		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),2) > 100) setcastledata strnpcinfo(NPC_NAME_HIDDEN),2,100;
-	}
-	if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5)) {
-		.@defence = getcastledata(strnpcinfo(NPC_NAME_HIDDEN),3);
-		setcastledata strnpcinfo(NPC_NAME_HIDDEN),3,.@defence + getcastledata(strnpcinfo(NPC_NAME_HIDDEN),5);
-		if (getcastledata(strnpcinfo(NPC_NAME_HIDDEN),3) > 100) setcastledata strnpcinfo(NPC_NAME_HIDDEN),3,100;
-	}
-	// Reset daily investment limits.
-	setcastledata strnpcinfo(NPC_NAME_HIDDEN),4,0;
-	setcastledata strnpcinfo(NPC_NAME_HIDDEN),5,0;
 
 	// Spawn boxes in proper order.
 	for (.@i = 0; .@i < .@Treasure ; ++.@i) {
@@ -1266,84 +1280,83 @@ OnClock0001:
 		.@boxid = .@treasurebox + (.@i+2) % 2;
 		.@box = 1 << .@i;
 		// Spawn or do not spawn chests if one already exists.
-		if ((getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & .@box) == 0) {
+		if (getd("$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure["+.@i+"]") != atoi(gettimestr("%Y%m%d", 20))) {
 			monster strnpcinfo(NPC_NAME_HIDDEN),.@treasurex[.@i],.@treasurey[.@i],"Treasure Chest",.@boxid,1,"Treasure#"+strnpcinfo(NPC_NAME_HIDDEN)+"::OnTreasureDied"+.@i;
-			setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") | .@box;
-		}
+			}
 	}
 	end;
 
 // Individual "You killed a chest" events to ensure proper spawning at the change of day.
 OnTreasureDied0:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~1;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied1:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~2;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied2:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~4;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied3:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~8;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied4:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~16;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied5:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~32;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied6:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~64;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied7:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~128;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied8:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~256;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied9:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~512;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied10:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~1024;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied11:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~2048;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied12:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~4096;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied13:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~8192;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied14:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~16384;
+	setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
 	end;
 OnTreasureDied15:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~32768;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 OnTreasureDied16:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~65536;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 OnTreasureDied17:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~131072;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 OnTreasureDied18:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~262144;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 OnTreasureDied19:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~524288;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 OnTreasureDied20:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~1048576;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 OnTreasureDied21:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~2097152;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 OnTreasureDied22:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~4194304;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 OnTreasureDied23:
-	setd "$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure",getd("$@"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure") & ~8388608;
-	end;
+setd "$"+strnpcinfo(NPC_NAME_HIDDEN)+"_treasure[0]", atoi(gettimestr("%Y%m%d", 20));
+end;
 }

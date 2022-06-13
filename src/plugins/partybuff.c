@@ -53,7 +53,7 @@ int status_change_start_post( int retVal___, struct block_list *src, struct bloc
         TBL_PC *sd = BL_CAST(BL_PC, bl);
         struct party_data *p;
         if (( p = party->search(sd->status.party_id ))) {
-			struct player_data *ssd = getFromMSD( sd, 0 );
+			struct player_data *ssd = getFromMSD(sd, 0);
 			int before_buff = ssd->buff;
 			if ( type == SC_BLESSING )
 				ssd->buff |= 0x1;
@@ -73,14 +73,14 @@ int status_change_start_post( int retVal___, struct block_list *src, struct bloc
     return retVal___;
 }
 
-int status_change_end_post( int retVal___, struct block_list *bl, enum sc_type type, int tid, const char *file, int line )
+int status_change_end_post( int retVal___, struct block_list *bl, enum sc_type type, int tid)
 {
     if ( bl->type == BL_PC && retVal___ > 0 ) {
         TBL_PC *sd = BL_CAST(BL_PC, bl);
         struct party_data *p;
         if ( sd->state.active == 1 ) { // fix map-server crash when player logout
         if (( p = party->search(sd->status.party_id ))) {
-           struct player_data *ssd = getFromMSD( sd, 0 );
+           struct player_data *ssd = getFromMSD(sd, 0);
 			int before_buff = ssd->buff;
 			if ( type == SC_BLESSING )
 				ssd->buff &= ~0x1;
@@ -114,8 +114,8 @@ void clif_party_info_overload( struct party_data* p, struct map_session_data *sd
         if(party_sd == NULL) party_sd = p->data[i].sd;
         WBUFL(buf,28+c*46) = m->account_id;
         if ( m->online && p->data[i].sd != NULL ) {
-            struct player_data *ssd = getFromMSD( p->data[i].sd, 0 );
-            char temp[NAME_LENGTH];
+            struct player_data *ssd = getFromMSD(p->data[i].sd, 0);
+            char temp[NAME_LENGTH+10];
             safesnprintf( temp, NAME_LENGTH, "[%s%s%s%s%s]%s",
                                                             ( ssd->buff & 0x1 )? "B" : "_",
                                                             ( ssd->buff & 0x2 )? "A" : "_",
@@ -148,7 +148,7 @@ bool pc_authok_pre( struct map_session_data **sd, int *login_id2, time_t *expira
 }
 
 int map_quit_post( int retVal___, struct map_session_data *sd ) {
-    //struct player_data *ssd = getFromMSD( sd, 0 );
+    //struct player_data *ssd = getFromMSD(sd, 0);
     removeFromMSD( sd, 0 );
     return retVal___;
 }

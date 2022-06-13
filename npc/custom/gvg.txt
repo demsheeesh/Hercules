@@ -1,0 +1,347 @@
+// Automated GvG Event 2.0 Beta version
+// Event runs every hour via OnMinute timer.
+// Feel free to edit as you wish
+// By : Mabuhay
+// Free release
+// Dont remove credit
+// Updated to v 2.0
+/*
+	- Added gepard support and check to every members
+	- More flexible options
+	- Can set cash, members, timer, and winpoints if gm starts the command.
+
+	New mechanics.
+
+	- When using @gvgeventjoin, all your members must be around you by 5x5 cell.
+
+	NOTE:
+		item rewards are only to be set here in script because adding them
+		in the GM option would be quite troublesome for me :D
+*/
+//
+-	script	gvg_event	-1,{
+OnInit:
+	// Enable gepard check?
+	// set to true to enable
+	.gepard = false;
+
+	// How many guild members are required?
+	// 3 = 3v3
+	// 5 = 5v5
+	// etc..
+	// only to be set once..
+	if ( !$gvgevent_mem ) $gvgevent_mem = 24;
+
+	// registration timer in mins.
+	// only to be set once..
+	if ( !$gvgevent_time ) $gvgevent_time = 5;
+
+	// how much points to win? Points is earned per kill
+	// only to be set once..
+	if ( !$gvgevent_winpts ) $gvgevent_winpts = 24;
+
+	// item reward
+	// <item_id>, <amount>
+	setarray .item,
+		BF_Badge2, 25;
+
+	// how much cash points earned
+	// set to 0 to disable
+	if ( !$gvgevent_cash ) $gvgevent_cash = 0;
+
+	.size = getarraysize(.item);
+	bindatcmd "gvggm", strnpcinfo(0)+"::OnStartEvent",60,60;
+	bindatcmd "gvgstart", strnpcinfo(0)+"::OnStartEvent2",2,2;
+	bindatcmd "gvgend", strnpcinfo(0)+"::OnEndEvent",2,2;
+	bindatcmd "gvgjoin", strnpcinfo(0)+"::OnJoinEvent";
+	end;
+
+OnStartEvent:
+	mes "Hi GM, what do you want to do?";
+	mes "Current settings :";
+	mes "Member count : "+ $gvgevent_mem;
+	mes "Registration time : "+ $gvgevent_time;
+	mes "Win points : "+ $gvgevent_winpts;
+	mes "Cashpoint reward : "+ $gvgevent_cash;
+	next;
+	switch(select("Start Event:Set Mem Count:Set Reg timer:Set Win Points:Set Cashpoint Reward")) {
+	case 1:
+		mes "Starting event..";
+		close2;
+		break;
+	case 2:
+		mes "Enter member count value";
+		mes "current : "+ $gvgevent_mem;
+		next;
+		input .@amt, 1;
+		mes "Do you want to set member count to "+ .@amt +"?";
+		next;
+		select("Yes");
+		mes "Done!";
+		close2;
+		$gvgevent_mem = .@amt;
+		end;
+	case 3:
+		mes "Enter registration time value";
+		mes "current : "+ $gvgevent_time;
+		next;
+		input .@amt, 1;
+		mes "Do you want to set registration time to "+ .@amt +"?";
+		next;
+		select("Yes");
+		mes "Done!";
+		close2;
+		$gvgevent_time = .@amt;
+		end;
+	case 4:
+		mes "Enter win points value";
+		mes "current : "+ $gvgevent_winpts;
+		next;
+		input .@amt, 1;
+		mes "Do you want to set win points to "+ .@amt +"?";
+		next;
+		select("Yes");
+		mes "Done!";
+		close2;
+		$gvgevent_winpts = .@amt;
+		end;
+	case 5:
+		mes "To disable, set to zero (0)";
+		mes "current : "+ $gvgevent_cash;
+		next;
+		input .@amt;
+		mes "Do you want to set cashpoints to "+ .@amt +"?";
+		next;
+		select("Yes");
+		mes "Done!";
+		close2;
+		$gvgevent_cash = .@amt;
+		end;
+	}
+	OnStartEvent2:
+		mes "Hi GL, what do you want to do?";
+		mes "Current settings :";
+		mes "Members per guild : "+ $gvgevent_mem;
+		mes "Registration time : "+ $gvgevent_time;
+		next;
+		switch(select("Start Event:Set members per guild:Set Registration timer")) {
+		case 1:
+			mes "Starting event..";
+			close2;
+			break;
+		case 2:
+			mes "Enter member count value";
+			mes "current : "+ $gvgevent_mem;
+			next;
+			input .@amt, 1;
+			mes "Do you want to set member count to "+ .@amt +"?";
+			next;
+			select("Yes");
+			mes "Done!";
+			close2;
+			$gvgevent_mem = .@amt;
+			end;
+		case 3:
+			mes "Enter registration time value";
+			mes "current : "+ $gvgevent_time;
+			next;
+			input .@amt, 1;
+			mes "Do you want to set registration time to "+ .@amt +"?";
+			next;
+			select("Yes");
+			mes "Done!";
+			close2;
+			$gvgevent_time = .@amt;
+			end;
+		}
+OnMinute00: // runs every hour..
+	if ( .start ) end;
+	.start = 1;
+	.@m = $gvgevent_mem;
+	gvgon "guild_vs2";
+	for ( .@j = 1; .@j < 17; .@j++ )
+		enablenpc "#bari0"+.@j;
+	setwall "guild_vs2", 12, 48, 4, DIR_NORTH, 0, "wonderwall_1";
+	setwall "guild_vs2", 87, 48, 4, DIR_NORTH, 0, "wonderwall_2";
+	for ( .@i = $gvgevent_time; .@i > 0; .@i-- ) {
+		if ( .start < 2 ) {
+			announce "<"+.@m+"v"+.@m+" Guild Event> Event start in "+.@i+" min(s) until slots are taken. Register now.", bc_all;
+			sleep 60000;
+		}
+	}
+	if ( !.slot1 || !.slot2 ) {
+		announce "<"+.@m+"v"+.@m+" Guild Event> Event is cancelled. Not enough participants.", bc_all;
+		donpcevent strnpcinfo(0)+"::OnEndEvent";
+		end;
+	}
+	announce "<"+.@m+"v"+.@m+" Guild Event> Guild ["+getguildinfo(GUILDINFO_NAME,.slot1)+"] vs Guild ["+getguildinfo(GUILDINFO_NAME,.slot2)+"].", bc_all;
+	end;
+
+OnJoinEvent:
+	.@GID = getcharid(2);
+	if (.@GID == 0) {
+		mes "Sorry, you are not in a guild.";
+		close;
+	}
+	if (getguildinfo(GUILDINFO_MASTER_CID,.@GID) != getcharid(0)) {
+		mes "Sorry, only your guild master can register.";
+		close;
+	}
+	if ( !.start ) {
+		mes "Event has not started.";
+		close;
+	} else if ( .start == 2 ) {
+		mes "Event is still on-going.";
+		close;
+	} else {
+		if ( .slot1 && .slot2 ) {
+			mes "All slots has been taken.";
+			close;
+		}
+		if ( !.slot1 ) .@slot = 1;
+		else if ( !.slot2) .@slot = 2;
+		if ( .slot1 == .@GID ) {
+			mes "You're guild has already registered.";
+			close;
+		}
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		.@c = getunits(BL_PC, .@u, 0, .@map$);
+		freeloop(true);
+		for (.@i = 0;.@i < .@c; ++.@i) {
+			if ( getcharid(CHAR_ID_GUILD, rid2name(.@u[.@i])) == .@GID ) {
+				if (.gepard) {
+					query_sql("SELECT `last_unique_id` FROM `login` WHERE `account_id` = '"+ getcharid(3, .@char_name$[.@i] ) +"'", .@unique_id$);
+					.@gvg_gepard$[.@gsize++] = .@unique_id$;
+					.@j = 0;
+					while (.@j < getarraysize(.@gvg_gepard$) && .@unique_id$ != .@gvg_gepard$[.@j]) ++.@j;
+					if (.@j < getarraysize(.@gvg_gepard$)) .@duplicate++;
+				}
+				.@current_mem++;
+				.@aid[.@size++] = .@u[.@i];
+				.@validmem$[.@size2++] = rid2name(.@u[.@i]);
+			}
+		}
+		freeloop(false);
+		if ( .@current_mem < $gvgevent_mem ) {
+			mes "You need at least "+$gvgevent_mem+" guild members around you"+(.gepard ? " with unique gepard id":"")+".";
+			close;
+		}
+		if ( .@current_mem > $gvgevent_mem ) {
+			mes "You need only need "+$gvgevent_mem+" guild members around you"+(.gepard ? " with unique gepard id":"")+".";
+			close;
+		}
+		if ( .gepard && .@duplicate ) {
+			mes "Gepard ID duplicate detected.";
+			mes "A member around you is using dual account.";
+			close;
+		}
+		mes "Participating members are :";
+		for ( .@i = 0; .@i < .@size2; .@i++)
+			mes "~ "+ .@validmem$[.@i];
+		next;
+		mes "Are you ready ?";
+		next;
+		select("Yes");
+		switch ( .@slot ) {
+			case 1: .slot1 = .@GID; break;
+			case 2: .slot2 = .@GID; break;
+		}
+		for ( .@j = 0; .@j < .@size; .@j++ ) {
+			attachrid(.@aid[.@j]);
+			.@gid = getcharid(2);
+			sc_end SC_ALL; // remove all status buffs
+			percentheal 100,100; // heals before warp
+			warp "guild_vs2", ( .slot1 == .@gid ) ? 9 : 90, 50;
+		}
+		detachrid;
+		if ( .slot1 && .slot2 ) {
+			.start = 2;
+			awake strnpcinfo(0);
+			sleep 3000;
+			mapannounce "guild_vs2", "Get ready ! You will have 1 minute to prepare", bc_blue;
+			sleep 2000;
+			for ( .@i = 60; .@i > 0; .@i -= 10 ) {
+				mapannounce "guild_vs2", .@i +" seconds before the beginning of the game.", bc_blue;
+				sleep 10000;
+			}
+			mapannounce "guild_vs2", "Start !", bc_blue;
+			gvgon "guild_vs2";
+			for ( .@j = 1; .@j < 17; .@j++ )
+				disablenpc "#bari0"+.@j;
+			delwall "wonderwall_1";
+			delwall "wonderwall_2";
+		}
+	}
+	end;
+
+OnPCKillEvent:
+	if ( .start && strcharinfo(3) == "guild_vs2" ) {
+		.@GID = getcharid(2);
+		if ( .@GID == .slot1 ) .guild1_score++;
+		else if ( .@GID == .slot2 ) .guild2_score++;
+		mapannounce "guild_vs2", strcharinfo(0) +" of Guild ["+getguildinfo(GUILDINFO_NAME,.@GID)+"] has pawned "+ rid2name(killedrid), bc_blue;
+		mapannounce "guild_vs2", "Guild ["+getguildinfo(GUILDINFO_NAME,.slot1)+"] - "+.guild1_score+" || Guild ["+getguildinfo(GUILDINFO_NAME,.slot2)+"] - "+.guild2_score+"", bc_blue;
+		if ( .guild1_score == $gvgevent_winpts || .guild2_score == $gvgevent_winpts ) {
+			gvgoff "guild_vs2";
+			if ( .guild1_score > .guild2_score ) { .winner = .slot1; .loser = .slot2; }
+			else { .winner = .slot2; .loser = .slot1; }
+			.@m = $gvgevent_mem;
+			announce "<"+.@m+"v"+.@m+" Guild Event> Guild ["+getguildinfo(GUILDINFO_NAME,.winner)+"] is victorious against Guild ["+getguildinfo(GUILDINFO_NAME,.loser)+"] !", bc_all;
+			mapannounce "guild_vs2", "Rewards will be delivered in few seconds before warping out.", bc_blue;
+			sleep 8000; // 8 sec pause so participating members can re-warp if dead
+			getunits BL_PC, .@aid, 0, "guild_vs2";
+			for(.@i=0;.@i<getarraysize(.@aid);.@i++) {
+				attachrid(.@aid[.@i]);
+				if ( getcharid(2) == .winner ) { // if winner
+					for ( .@j = 0; .@j < .size; .@j+=2 )
+						getitem .item[.@j], .item[.@j+1];
+					if ( $gvgevent_cash ) {
+						#CASHPOINTS += $gvgevent_cash;
+						dispbottom "You have gained "+$gvgevent_cash+" cashpoints. Total : "+ #CASHPOINTS;
+					}
+				} else if ( getcharid(2) == .loser ) { // if loser
+					dispbottom "Thank you for participating GvG Event.";
+				}
+			}
+			detachrid;
+			sleep 2000; // 2 sec pause..
+			donpcevent strnpcinfo(0)+"::OnEndEvent";
+			end;
+		}
+		attachrid( killedrid );
+		.@GID = getcharid(2);
+		if ( .@GID == .slot1 || .@GID == .slot2 ) {
+			dispbottom "You will be warped back to the battle area in 10 secs.";
+			sleep2 10000; // return to battle in 5 sec
+			warp "guild_vs2", (.@GID == .slot1) ? 7:(.@GID == .slot2) ? 92:50, 50;
+			sleep2 1000; // heal in 1 sec
+			percentheal 100,100;
+		}
+	}
+	end;
+
+OnEndEvent:
+	if ( !.start ) end;
+	.start = .slot1 = .slot2 = .loser = .winner = .guild1_score = .guild2_score = false;
+	mapwarp "guild_vs2", "prontera", 150, 180;
+	end;
+}
+
+// Barricades
+guild_vs2,25,53,0	script	#bari01	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,25,52,0	script	#bari02	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,25,51,0	script	#bari03	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,25,50,0	script	#bari04	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,25,49,0	script	#bari05	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,25,48,0	script	#bari06	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,25,47,0	script	#bari07	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,25,46,0	script	#bari08	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+
+guild_vs2,74,53,0	script	#bari09	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,74,52,0	script	#bari010	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,74,51,0	script	#bari011	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,74,50,0	script	#bari012	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,74,49,0	script	#bari013	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,74,48,0	script	#bari014	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,74,47,0	script	#bari015	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }
+guild_vs2,74,46,0	script	#bari016	BARRICADE_,{ end; OnInit: disablenpc strnpcinfo(0); }

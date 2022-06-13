@@ -39,15 +39,15 @@ v3.1 - Added option to charge per use. [Mumbles]
 	-----------------------------------------------------*/
 	OnInit:
 		.delay = 3600;		// Delay per use, in seconds (default: 0)
-		.cost = 0;	// Default cost to use command if '.charge' is enabled
-		.charge = 0;	// Charge to use command? 0 = no, 1 = yes (default: 0)
+		.cost = 600;	// Default cost to use command if '.charge' is enabled
+		.charge = 1;	// Charge to use command? 0 = no, 1 = yes (default: 0)
 		.deadlock = 1;	// Prevent usage when dead? 0 = no, 1 = yes (default: 0)
 		.town = 0;		// Require 'mf_town'? 0 = no, 1 = yes (default: 0)
 
-		bindatcmd "deblo", strnpcinfo(3) +"::OnAtcommand", 0, 2;
+		bindatcmd ("deblo", strnpcinfo(3) +"::OnAtcommand");
 		end;
 
-
+OnAtcommand:
 	/*-----------------------------------------------------
 	Function: go()
 	-------------------------------------------------------
@@ -60,7 +60,7 @@ v3.1 - Added option to charge per use. [Mumbles]
 		if (.deadlock && !Hp) {
 			message strcharinfo(0), "You may not use @deblo when you are dead.";
 		} else if (.town && !getmapflag(strcharinfo(3), MF_TOWN)) {
-			message strcharinfo(0), "You may only use @go in towns.";
+			message strcharinfo(0), "You may only use @deblo in towns.";
 		} else if (.delay && deblo_delay > gettimetick(2)) {
 			message strcharinfo(0), "You must wait "+ (deblo_delay - gettimetick(2))  +" seconds before using deblo again.";
 		} else if (getgroupid() < getarg(4) || getmapflag(getarg(0), MF_NOWARP)) {

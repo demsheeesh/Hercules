@@ -1,0 +1,36 @@
+function	script	timeleft__	{
+	.@left = getarg(0);
+	if (.@left <= 0)
+		return getarg(0);
+	.@day = .@left / 86400;
+	.@hour = .@left % 86400 / 3600;
+	.@min = .@left % 3600 / 60;
+	.@sec = .@left % 60;
+	if (.@day)
+		return sprintf(_$("%d day %d hour"), .@day, .@hour);
+	else if (.@hour)
+		return sprintf(_$("%d hour %d min"), .@hour, .@min);
+	else if (.@min)
+		return sprintf(_$("%d min %d sec"), .@min, .@sec);
+	else
+		return sprintf(_$("%d sec"), .@sec);
+}
+
+prontera,155,185,5	script	sdfsf	1_F_MARIA,{
+	.@timeleft = test_countdown + 24*60*60 - gettimetick(2);
+	mes "time left -> "+ timeleft__(.@timeleft);
+	showdigit ~.@timeleft, 2;
+	bug_showdigit = true;
+	close2;
+	showdigit 0, 3;
+	end;
+OnPCLoginEvent:
+	if (bug_showdigit)
+		showdigit 0, 3;
+	end;
+}
+
+prontera,158,185,5	script	1_day_countdown	1_F_MARIA,{
+	test_countdown = gettimetick(2);
+	end;
+}

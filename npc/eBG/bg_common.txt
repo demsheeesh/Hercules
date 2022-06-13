@@ -124,10 +124,10 @@ OnInit:
 	setarray .bg_colors$[BGT_CTF],	"0xA0522D"		,"0x483D8B"			,"0x696969"					,"0x4169E1"				,"0x808000"					,"0x9ACD32"					,"0xFFA500"		,"0xDDA0DD"	,"0x4169E1"           , "0xFF2200";
 	// Common Settings
 	setarray .bg_common,	BGT_DOM, // Maximum BG Types(Starting from 1).
-							2,       // Max Player PER IP.
-							1,       // Time after which BG should rotate if not enough players (in minutes).
+							1,       // Max Player PER IP.
+							3,       // Time after which BG should rotate if not enough players (in minutes).
 							-1,      // RESERVED
-							1,       // Announce Every x minutes (Players currently playing)
+							5,       // Announce Every x minutes (Players currently playing)
 							-1,      // RESERVED
 							99;      // Minimum Base Level Required to join BG
 
@@ -155,7 +155,7 @@ OnInit:
 								 1;			// BG_CTF Variable is increased by x upon Match End
 	/* Boss Settings */
 	setarray $bg_tierra_boss[0], 5,              // Points to Win on Boss (Total Boss)
-								 BF_Badge1,      // ID of Badge to be given to Winning/Losing Teams (Z)
+								 BF_Badge2,      // ID of Badge to be given to Winning/Losing Teams (Z)
 								 15,             // Amount of Z For Winning Team
 								 10,             // Amount of Z For Losing Team
 								 10,             // Amount of Z For Match Tie
@@ -192,7 +192,7 @@ OnInit:
 								5,              // % HP to Decrease when Neutral Flag is Taken
 								5,              // % SP to Decrease When Neutral Flag is Taken
 								2000,           // MiliSeconds After which HP/SP Will Decrease
-								BF_Badge1,      // ID of Badge to be given to winning/losing teams (Z)
+								BF_Badge2,      // ID of Badge to be given to winning/losing teams (Z)
 								30,             // Amount of Z For Winning Team
 								15,             // Amount of Z For Losing Team
 								10,             // Amount of Z For Match Tie
@@ -254,7 +254,7 @@ OnInit:
 						  1;              // BG_RUSH Variable is increased by x upon Match End
 	/* Domination */
 	setarray $bg_tierra_dom[0], 99,             // Score to Win eBG
-								BF_Badge1,      // ID of Badge to be given to winning/losing teams (Z)
+								BF_Badge2,      // ID of Badge to be given to winning/losing teams (Z)
 								30,             // Amount of Z For Winning Team
 								15,             // Amount of Z For Losing Team
 								10,             // Amount of Z For Match Tie

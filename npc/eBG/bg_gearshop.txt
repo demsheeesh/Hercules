@@ -9,81 +9,12 @@
 				callsub(OnShopCommand);
 				end;
 			OnInit:
-				setarray .bg_common, 14,         // Enable BG Shop, 1=(Item from .bg_common[1]), 2=SupplyStore, 4=BG Items, 8=WoE Items
+				setarray .bg_common, 12,         // Enable BG Shop, 1=(Item from .bg_common[1]), 2=SupplyStore, 4=BG Items, 8=WoE Items
 									 Red_Potion; // The item bought by 1 point of each BG (.bg_common[0] should have 1st bit set) (Default: eBG_Red_Box)
 				.bgshop_town_only = 1; // Enable @bgshop from town only?
 				// Format: Item, Quantity
 				// These items would be BG Exclusive and sold by @bgshop
-				setarray .tbg_supply[0],
-														Flawed_Yellow_Ribbon, 20,
-														Flawed_Diabolus_Helmet, 20,
-														Flawed_Sunglasses, 20,
-														Flawed_Glasses, 20,
-														Flawed_Robo_Eye, 20,
-														Flawed_Antique_Pipe, 20,
-														Flawed_Bubble_Gum_In_Mouth, 20,
-														Flawed_Candy_Cane_In_The_Mouth, 20,
-														Flawed_Choco_Donut_In_Mouth, 20,
-														Flawed_Donut_In_Mouth, 20,
-														Flawed_Fish_In_Mouth, 20,
-														Flawed_4Leaf_Clover_In_Mouth, 20,
-														Flawed_Unf_Armor_Of_Naga, 20,
-														Flawed_Und_Armor_Of_Naga, 20,
-														Flawed_Unf_Valkyrie_Armor, 20,
-														Flawed_Und_Valkyrie_Armor, 20,
-														Flawed_Combat_Knife, 20,
-														Flawed_Knife, 20,
-														Flawed_Cranial_Shield, 20,
-														Flawed_Heavy_Shield, 20,
-														Flawed_An_Shield, 20,
-														Flawed_Piece_Of_Angent_Skin, 20,
-														Flawed_Shoes, 20,
-														Flawed_Glove, 20,
-														Flawed_Rosary, 20,
-														Str_Dish07, 1,
-														Int_Dish07, 1,
-														Vit_Dish07, 1,
-														Agi_Dish07, 1,
-														Dex_Dish07, 1,
-														Luk_Dish07, 1,
-														Gloomy_Box, 1,
-														Box_Of_Grudge, 1,
-														Sleepy_Box, 1;
-
-				// These items would be WoE Exclusive and sold by @bgshop
-				setarray .twoe_supply[0],White_Slim_Potion, 1,
-										Light_Blue_Pot, 1,
-										Panacea, 1,
-										Light_Center_Pot, 1,
-										Light_Awakening_Pot, 1,
-										Light_Berserk_Pot, 1,
-										Yellow_Gemstone, 1,
-										Red_Gemstone, 1,
-										Blue_Gemstone, 1,
-										Fire_Bottle, 1,
-										Acid_Bottle, 1,
-										MenEater_Plant_Bottle, 1,
-										Mini_Bottle, 1,
-										Coating_Bottle, 1,
-										Poison_Bottle, 1,
-										Flame_Stone, 1,
-										Ice_Stone, 1,
-										Wind_Stone,1,
-										Shadow_Orb, 1,
-										Speed_Up_Potion, 1,
-										Fragment_Of_Crystal, 1,
-										Spiderweb, 1,
-										Inspector_Certificate, 1,
-										Str_Dish07, 1,
-										Int_Dish07, 1,
-										Vit_Dish07, 1,
-										Agi_Dish07, 1,
-										Dex_Dish07, 1,
-										Luk_Dish07, 1,
-										S_Barricade_Repair_Kit, 1,
-										S_Gstone_Repair_Kit, 1;
-				// Supply Shop (purchasable by Zeny)
-				setarray .tsupply_supply[0],White_Slim_Potion, 1,
+				setarray .tbg_supply[0], Apple_Of_Archer, 1,
 										Blue_Potion, 1,
 										Panacea, 1,
 										Light_Center_Pot, 1,
@@ -101,11 +32,55 @@
 										Speed_Up_Potion, 1,
 										Fragment_Of_Crystal, 1,
 										Spiderweb, 1,
-										Inspector_Certificate, 1;
-				// Shop Currency (in order of precedence)
-				setarray .ebg_currency[0], BF_Badge2;
+										Inspector_Certificate, 1,
+										Str_Dish07, 1,
+										Int_Dish07, 1,
+										Vit_Dish07, 1,
+										Agi_Dish07, 1,
+										Dex_Dish07, 1,
+										Luk_Dish07, 1;
 
-				bindatcmd("bgshop", strnpcinfo(NPC_NAME_UNIQUE) +"::OnShopCommand");
+				// These items would be WoE Exclusive and sold by @bgshop
+				setarray .twoe_supply[0],White_Slim_Potion, 1,
+										Blue_Potion, 1,
+										Panacea, 1,
+										Light_Center_Pot, 1,
+										Light_Awakening_Pot, 1,
+										Light_Berserk_Pot, 1,
+										Yellow_Gemstone, 1,
+										Red_Gemstone, 1,
+										Blue_Gemstone, 1,
+										Fire_Bottle, 1,
+										Acid_Bottle, 1,
+										MenEater_Plant_Bottle, 1,
+										Mini_Bottle, 1,
+										Coating_Bottle, 1,
+										Poison_Bottle, 1,
+										Speed_Up_Potion, 1,
+										Fragment_Of_Crystal, 1,
+										Spiderweb, 1,
+										Inspector_Certificate, 1,
+										Str_Dish07, 1,
+										Int_Dish07, 1,
+										Vit_Dish07, 1,
+										Agi_Dish07, 1,
+										Dex_Dish07, 1,
+										Luk_Dish07, 1,
+										S_Barricade_Repair_Kit, 1,
+										S_Gstone_Repair_Kit, 1;
+				// Supply Shop (purchasable by Zeny)
+				setarray .tsupply_supply[0],Dun_Tele_Scroll1, 4500,
+											Dun_Tele_Scroll2, 3500,
+											WOB_Rune, 3500,
+											WOB_Schwaltz, 3500,
+											WOB_Rachel, 3500,
+											WOB_Local, 3500,
+											//Support_Crystal_Summoner, 2000000, // Not Implemented Yet
+											Kafra_Card, 5500;
+				// Shop Currency (in order of precedence)
+				setarray .ebg_currency[0],	BF_Badge2;
+
+				bindatcmd("gearshop", strnpcinfo(NPC_NAME_UNIQUE) +"::OnShopCommand");
 				// Initiate the NPC Shop
 				callsub(OnShopInit);
 				end;
@@ -153,7 +128,7 @@
 					callsub(OnShopRedBox);
 					break;
 				case 2:
-					callsub(OnShopExclusive, "supply", MAP_IS_BG);
+					callsub(OnShopExclusive, "supply", -1);
 					break;
 				case 3: // BG Shop
 					callsub(OnShopExclusive, "bg", MAP_IS_BG);

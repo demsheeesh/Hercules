@@ -1,0 +1,65 @@
+//===== Hercules Script ======================================
+//= PVP No MVP Card
+//===== By ===================================================
+//= Max
+//===== Version ==============================================
+//= 1.0
+//===== Compatible With ======================================
+//= eAthena , rAthena , Hercules
+//===== Description ==========================================
+//= This is a PVP NO MVP Card , if player bring MVP Cards ,
+//  they cannot enter this PVP Map
+//===== Warper NPC ===========================================
+prontera,162,185,5	script	PVP Warper	4_M_BLACKMAN,{
+//============================================================
+	mes "[PvP Warper]";
+	mes "Hello there";
+	mes "You want to go pvp ?";
+	next;
+	menu "PVP No MVP Card ^FF0000["+getmapusers("guild_vs5")+"/100]^000000",-,"Nah i'm just looking around",S_exit;
+
+		if (getmapusers("guild_vs5") > 99) callsub S_full;
+		for( set .@i,0; .@i<getarraysize(.NoMVP_ids); set .@i,.@i+1 ) {
+			if (countitem(.NoMVP_ids[.@i])) {
+				mes "You can not use MVP Card in this pvp.";
+				close;
+			}
+		}
+		announce "Someone PVP room",bc,0x33FF33;
+		warp "guild_vs5",0,0;
+    switch(rand(1,10)) {
+			case 1: warp "guild_vs5",34,38; break;
+			case 2: warp "guild_vs5",46,38; break;
+			case 3: warp "guild_vs5",58,38; break;
+			case 4: warp "guild_vs5",70,38; break;
+			case 5: warp "guild_vs5",82,38; break;
+			case 6: warp "guild_vs5",82,58; break;
+			case 7: warp "guild_vs5",65,58; break;
+			case 8: warp "guild_vs5",49,58; break;
+			case 9: warp "guild_vs5",33,58; break;
+			case 10: warp "guild_vs5",52,24; break;
+      		}
+    		end;
+
+S_full:
+	mes "[PvP Warper]";
+	mes "I'm sorry, this arena is full.  Please try again later...";
+	close;
+
+S_exit:
+	mes "[PvP Warper]";
+	mes "Bye.";
+	close;
+
+	// items not allowed in Non MVP Card PVP
+	setarray .NoMVP_ids[0], 12211, 4054, 4241, 4426, 4290, 4169, 4174, 4451, 4354, 4047, 4198, 4440, 4427, 4236, 4359, 4425, 4372, 4147, 4145, 4168, 4386, 4142, 4134, 4137, 4123, 4330, 4441, 4324, 4408, 4128, 4363, 4365, 4430, 4263, 4403, 4318, 4419, 4376, 4357, 4276, 4146, 4132, 4131, 4143, 4135, 4144, 4148, 4121, 4342, 4367, 4302, 4399, 4305, 4407, 4374, 4361, 4352;
+	end;
+}
+
+// MAPFLAG
+
+guild_vs5	mapflag	nowarp
+guild_vs5	mapflag	nosave
+guild_vs5	mapflag	noteleport
+guild_vs5	mapflag	nodrop
+guild_vs5	mapflag	nocommand	10

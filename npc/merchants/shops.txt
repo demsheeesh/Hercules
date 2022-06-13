@@ -612,7 +612,6 @@ OnInit:
 
 geffen_in,77,173,0	trader	Magical Item Seller#gef	1_M_WIZARD,{
 OnInit:
-	sellitem Blue_Gemstone;
 	sellitem Rod;
 	sellitem Wand;
 	sellitem Staff;
@@ -704,7 +703,6 @@ OnInit:
 
 hu_in01,252,368,3	trader	Tool Dealer#hu2	4_F_01,{
 OnInit:
-	sellitem Blue_Gemstone;
 	sellitem Sunglasses;
 	sellitem Garlet;
 	sellitem Monsters_Feed;
@@ -852,7 +850,6 @@ OnInit:
 
 yuno,163,187,5	trader	Magical Item Seller#yuno	4_F_01,{
 OnInit:
-	sellitem Blue_Gemstone;
 	sellitem Rod;
 	sellitem Wand;
 	sellitem Staff;
@@ -1717,7 +1714,6 @@ OnInit:
 
 ve_in,252,313,0	trader	Magical Item Seller#ve	4_F_DST_GRAND,{
 OnInit:
-	sellitem Blue_Gemstone;
 	sellitem Rod;
 	sellitem Wand;
 	sellitem Staff;
