@@ -66890,7 +66890,7 @@ void HP_pc_damage(struct map_session_data *sd, struct block_list *src, unsigned 
 	}
 	return;
 }
-int HP_pc_dead(struct map_session_data *sd, struct block_list *src, int skill) {
+int HP_pc_dead(struct map_session_data *sd, struct block_list *src, int skill_id) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_pc_dead_pre > 0) {
