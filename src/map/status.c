@@ -318,7 +318,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 				 && check_distance_bl(target, d_bl, sce->val3)
 				) {
 					clif->damage(d_bl, d_bl, 0, 0, hp, 0, BDT_NORMAL, 0);
-					status_fix_damage(NULL, d_bl, hp, 0);
+					status_fix_damage(NULL, d_bl, hp, 0, 0);
 					return 0;
 				}
 				status_change_end(target, SC_DEVOTION, INVALID_TIMER);
