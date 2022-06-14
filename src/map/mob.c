@@ -2745,7 +2745,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 					// When PK Mode is enabled, increase item drop rate bonus of each items by 25% when there is a 20 level difference between the player and the monster.[KeiKun]
 					if (battle_config.pk_mode && (md->level - sd->status.base_level >= 20))
-						drop_rate_bonus += 25; // flat 25% bonus 
+						drop_rate_bonus += 25; // flat 25% bonus
 
 					drop_rate_bonus += sd->dropaddrace[md->status.race] + (is_boss(src) ? sd->dropaddrace[RC_BOSS] : sd->dropaddrace[RC_NONBOSS]); // bonus2 bDropAddRace[KeiKun]
 
@@ -2976,7 +2976,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			}
 		}
 
-		pc_record_mobkills(sd, md);
+		pc->srecord_mobkills(sd, md);
 
 		if( sd ) {
 			if( sd->mission_mobid == md->class_) { //TK_MISSION [Skotlex]
