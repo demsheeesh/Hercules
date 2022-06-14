@@ -8277,14 +8277,14 @@ void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd,
 		add2limit(ssd->status.woe_statistics.kill_count, 1, USHRT_MAX);
 		add2limit(tsd->status.woe_statistics.death_count, 1, USHRT_MAX);
 
-		log->woe_kill(ssd, tsd, skill_id);
+		logs->woe_kill(ssd, tsd, skill_id);
 
 		//Killer msg
-		sprintf(output, "( You Kill the %s [%s] using <%s> )", pc->job_name(tsd->status.class_), tsd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
+		sprintf(output, "( You Kill the %s [%s] using <%s> )", pc->job_name(tsd->status.class), tsd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
 		clif_disp_onlyself(ssd, output);
 
 		//Target msg
-		sprintf(output, "( The %s [%s] kill you using <%s> )", pc->job_name(ssd->status.class_), ssd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
+		sprintf(output, "( The %s [%s] kill you using <%s> )", pc->job_name(ssd->status.class), ssd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
 		clif_disp_onlyself(tsd, output);
 	}
 }
