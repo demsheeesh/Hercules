@@ -230,7 +230,7 @@ static void log_pick_pc(struct map_session_data *sd, e_log_pick_type type, int a
 	nullpo_retv(itm);
 	log_pick(sd->status.char_id, sd->bl.m, type, amount, itm, data ? data : itemdb->exists(itm->nameid));
 }
-int log_woe_kill(struct map_session_data *ssd, struct map_session_data *tsd, uint16 skill_id)
+int log_woe_kill(struct map_session_data *ssd, struct map_session_data *tsd)
 {
 	char esc_sname[NAME_LENGTH * 2 + 1];
 	char esc_tname[NAME_LENGTH * 2 + 1];
