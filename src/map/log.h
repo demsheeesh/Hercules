@@ -158,7 +158,7 @@ struct log_interface {
 	char (*chattype2char) (e_log_chat_type type);
 	bool (*should_log_item) (int nameid, int amount, int refine_level, struct item_data *id);
 
-	int (*woe_kill) (struct map_session_data *ssd, struct map_session_data *tsd);
+	int (*woe_kill) (struct map_session_data *ssd, struct map_session_data *tsd, int skill_id);
 };
 
 #ifdef HERCULES_CORE
