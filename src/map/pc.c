@@ -8295,11 +8295,11 @@ void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd,
 
 		//Killer msg
 		sprintf(output, "( You Kill the %s [%s] using <%s> )", job_name(tsd->status.class_), tsd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
-		clif_disp_onlyself(ssd, output, strlen(output));
+		clif_disp_onlyself(ssd, output);
 
 		//Target msg
 		sprintf(output, "( The %s [%s] kill you using <%s> )", job_name(ssd->status.class_), ssd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
-		clif_disp_onlyself(tsd, output, strlen(output));
+		clif_disp_onlyself(tsd, output);
 	}
 }
 
