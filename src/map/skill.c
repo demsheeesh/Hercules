@@ -3841,7 +3841,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			if (e_bl) {
 				if (!rmdamage) {
 					clif->skill_damage(e_bl, e_bl, timer->gettick(), 0, 0, damage, dmg.div_, skill_id, -1, skill->get_hit(skill_id, skill_lv));
-					status_fix_damage(NULL, e_bl, damage, 0);
+					status_fix_damage(NULL, e_bl, damage, 0, 0);
 				} else {
 					clif->skill_damage(bl, bl, timer->gettick(), 0, 0, damage, dmg.div_, skill_id, -1, skill->get_hit(skill_id, skill_lv));
 					status_fix_damage(bl, bl, damage, 0, 0);
