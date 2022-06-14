@@ -5861,7 +5861,7 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 		if (sc->data[SC_ILLUSION] != NULL && damage != 0)
 			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
 	}
-		pc_record_maxdamage(src, dst, damage);
+		pc->record_maxdamage(src, dst, damage);
 		sd = BL_CAST(BL_PC, src);
 		if (sd && skill_id == CR_ACIDDEMONSTRATION)
 		{
