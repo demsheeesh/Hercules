@@ -8147,7 +8147,6 @@ static void pc_damage(struct map_session_data *sd, struct block_list *src, unsig
 
 void pc_record_mobkills(struct map_session_data *sd, struct mob_data *md)
 {
-	int type = 0;
 
 	if (!sd) return;
 
@@ -8268,7 +8267,7 @@ void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd,
 		if (gc == NULL || gc->guild_id <= 0)
 			return;
 
-		if ((tg = guild_search(tsd->status.guild_id)) == NULL || (sg = guild_search(ssd->status.guild_id)) == NULL)
+		if ((tg = guild->search(tsd->status.guild_id)) == NULL || (sg = guild->search(ssd->status.guild_id)) == NULL)
 			return;
 
 		// Single Player Ranking WoE
@@ -8278,7 +8277,7 @@ void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd,
 		add2limit(ssd->status.woe_statistics.kill_count, 1, USHRT_MAX);
 		add2limit(tsd->status.woe_statistics.death_count, 1, USHRT_MAX);
 
-		log_woe_kill(ssd, tsd, skill_id);
+		log->woe_kill(ssd, tsd, skill_id);
 
 		//Killer msg
 		sprintf(output, "( You Kill the %s [%s] using <%s> )", pc->job_name(tsd->status.class_), tsd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
