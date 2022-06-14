@@ -3721,7 +3721,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 	if( !dmg.amotion ) {
 		//Instant damage
 		if ((!sc || (!sc->data[SC_DEVOTION] && skill_id != CR_REFLECTSHIELD && !sc->data[SC_WATER_SCREEN_OPTION])) && !shadow_flag)
-			status_fix_damage(src,bl,damage,dmg.dmotion); //Deal damage before knockback to allow stuff like firewall+storm gust combo.
+			status_fix_damage(src,bl,damage,dmg.dmotion, skill_id); //Deal damage before knockback to allow stuff like firewall+storm gust combo.
 		if( !status->isdead(bl) && additional_effects )
 			skill->additional_effect(src,bl,skill_id,skill_lv,dmg.flag,dmg.dmg_lv,tick);
 		if( damage > 0 ) //Counter status effects [Skotlex]
@@ -3826,7 +3826,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 					//This check is only for magical skill.
 					//For BF_WEAPON skills types track var rdamage and function battle_calc_return_damage
 					clif->damage(bl, bl, 0, 0, damage, 0, BDT_NORMAL, 0);
-					status_fix_damage(bl, bl, damage, 0);
+					status_fix_damage(bl, bl, damage, 0, 0);
 				}
 			} else {
 				status_change_end(bl, SC_DEVOTION, INVALID_TIMER);
@@ -6868,7 +6868,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 								{
 									if (sd->status.guild_id && map_allowed_woe(src->m))
 									{
-										if (sd->status.guild_id == dstsd->status.guild_id || guild_isallied(sd->status.guild_id, dstsd->status.guild_id))
+										if (sd->status.guild_id == dstsd->status.guild_id || guild->isallied(sd->status.guild_id, dstsd->status.guild_id))
 											 add2limit(sd->status.woe_statistics.healing_done, heal_get_jobexp, UINT_MAX);
 										else
 											 add2limit(sd->status.woe_statistics.wrong_healing_done, heal_get_jobexp, UINT_MAX);
@@ -11703,7 +11703,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		{
 			if (map_allowed_woe(src->m) && sd->status.guild_id)
 			{
-				if (sd->status.guild_id == dstsd->status.guild_id || guild_isallied(sd->status.guild_id, dstsd->status.guild_id))
+				if (sd->status.guild_id == dstsd->status.guild_id || guild->isallied(sd->status.guild_id, dstsd->status.guild_id))
 					add2limit(sd->status.woe_statistics.support_skills_used, 1, UINT_MAX);
 				else
 					add2limit(sd->status.woe_statistics.wrong_support_skills_used, 1, UINT_MAX);
