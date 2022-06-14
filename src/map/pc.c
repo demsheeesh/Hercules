@@ -8221,6 +8221,8 @@ void pc_record_damage(struct block_list *src, struct block_list *dst, int damage
 				add2limit(((TBL_PC*)dst)->status.woe_statistics.damage_received, damage, UINT_MAX);
 			}
 			break;
+			default:
+	break;
 		case BL_MOB:
 		{
 			struct mob_data *md = BL_CAST(BL_MOB, dst);
@@ -8231,22 +8233,32 @@ void pc_record_damage(struct block_list *src, struct block_list *dst, int damage
 				case MOBID_EMPELIUM:
 					add2limit(sd->status.woe_statistics.emperium_damage, damage, UINT_MAX);
 					break;
+					default:
+	break;
 				case MOBID_BARRICADE:
 					add2limit(sd->status.woe_statistics.barricade_damage, damage, UINT_MAX);
 					break;
+					default:
+	break;
 				case MOBID_S_EMPEL_1:
 				case MOBID_S_EMPEL_2:
 					add2limit(sd->status.woe_statistics.gstone_damage, damage, UINT_MAX);
 					break;
+					default:
+	break;
 				default:
 					add2limit(sd->status.woe_statistics.guardian_damage, damage, UINT_MAX);
 					break;
+					default:
+	break;
 				}
 			}
 			break;
+			default:
+	break;
 		}
 		default:
-  break;
+	break;
 	}
 }
 void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd, int skill_id)
