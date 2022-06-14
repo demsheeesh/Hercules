@@ -8246,8 +8246,6 @@ void pc_record_damage(struct block_list *src, struct block_list *dst, int damage
 			}
 			break;
 		}
-		default:
-  break;
 	}
 }
 void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd, int skill_id)
@@ -8283,11 +8281,11 @@ void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd,
 		log_woe_kill(ssd, tsd, skill_id);
 
 		//Killer msg
-		sprintf(output, "( You Kill the %s [%s] using <%s> )", job_name(tsd->status.class_), tsd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
+		sprintf(output, "( You Kill the %s [%s] using <%s> )", pc->job_name(tsd->status.class_), tsd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
 		clif_disp_onlyself(ssd, output);
 
 		//Target msg
-		sprintf(output, "( The %s [%s] kill you using <%s> )", job_name(ssd->status.class_), ssd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
+		sprintf(output, "( The %s [%s] kill you using <%s> )", pc->job_name(ssd->status.class_), ssd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
 		clif_disp_onlyself(tsd, output);
 	}
 }
