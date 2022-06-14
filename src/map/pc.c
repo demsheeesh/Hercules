@@ -76,6 +76,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 static struct pc_interface pc_s;
 struct pc_interface *pc;
