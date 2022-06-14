@@ -3758,7 +3758,7 @@ static void battle_consume_ammo(struct map_session_data *sd, int skill_id, int l
 
 	if(sd->equip_index[EQI_AMMO]>=0) //Qty check should have been done in skill_check_condition
 	{
-		pc_delitem(sd, sd->equip_index[EQI_AMMO], qty, 0, 1, LOG_TYPE_CONSUME);
+		pc->delitem(sd, sd->equip_index[EQI_AMMO], qty, 0, 1, LOG_TYPE_CONSUME);
 
 		if (sd->status.guild_id && map_allowed_woe(sd->bl.m))
 		{
@@ -6724,7 +6724,7 @@ static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_
 			struct block_list *e_bl = map->id2bl(tsc->data[SC_WATER_SCREEN_OPTION]->val1);
 			if (e_bl && !status->isdead(e_bl)) {
 				clif->damage(e_bl, e_bl, 0, 0, damage, wd.div_, BDT_NORMAL, 0);
-				status_fix_damage(NULL, e_bl, damage, 0);
+				status_fix_damage(NULL, e_bl, damage, 0, 0);
 			}
 		}
 	}
