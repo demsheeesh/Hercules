@@ -5083,7 +5083,7 @@ static int clif_damage(struct block_list *src, struct block_list *dst, int sdela
 	damage2 = (int)min(in_damage2,INT_MAX);
 #endif
 
-	pc_record_maxdamage(src, dst, damage + damage2);
+	pc->record_maxdamage(src, dst, damage + damage2);
 
 	type = clif_calc_delay(type,div,damage+damage2,ddelay);
 
