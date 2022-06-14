@@ -5857,6 +5857,7 @@ static int clif_skill_damage(struct block_list *src, struct block_list *dst, int
 #endif
 
 	const struct status_change *sc = status->get_sc(dst);
+	struct map_session_data *sd;
 	if (sc != NULL && sc->count) {
 		if (sc->data[SC_ILLUSION] != NULL && damage != 0)
 			damage = damage * (sc->data[SC_ILLUSION]->val2) + rnd() % 100;
