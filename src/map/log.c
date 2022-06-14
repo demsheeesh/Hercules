@@ -234,11 +234,12 @@ int log_woe_kill(struct map_session_data *ssd, struct map_session_data *tsd)
 {
 	char esc_sname[NAME_LENGTH * 2 + 1];
 	char esc_tname[NAME_LENGTH * 2 + 1];
+	uint16 skill_id = 0;
 
 	SQL->EscapeStringLen(logs->mysql_handle, esc_sname, ssd->status.name, strnlen(ssd->status.name, NAME_LENGTH));
 	SQL->EscapeStringLen(logs->mysql_handle, esc_tname, tsd->status.name, strnlen(tsd->status.name, NAME_LENGTH));
 
-	if (SQL_ERROR == SQL->Query(logs->mysql_handle, "INSERT DELAYED INTO `char_woe_kills` (`time`,`killer`,`killer_id`,`killed`,`killed_id`,`map`,`skill`) VALUES (NOW(), '%s', '%d', '%s', '%d', '%s', '%d')", esc_sname, ssd->status.char_id, esc_tname, tsd->status.char_id, map->list[tsd->bl.m].name, skill))
+	if (SQL_ERROR == SQL->Query(logs->mysql_handle, "INSERT DELAYED INTO `char_woe_kills` (`time`,`killer`,`killer_id`,`killed`,`killed_id`,`map`,`skill`) VALUES (NOW(), '%s', '%d', '%s', '%d', '%s', '%d')", esc_sname, ssd->status.char_id, esc_tname, tsd->status.char_id, map->list[tsd->bl.m].name, skill_id))
 		Sql_ShowDebug(logs->mysql_handle);
 
 	return 0;
