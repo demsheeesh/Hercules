@@ -8245,6 +8245,8 @@ void pc_record_damage(struct block_list *src, struct block_list *dst, int damage
 			}
 			break;
 		}
+		default:
+  break;
 	}
 }
 void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd, int skill_id)
