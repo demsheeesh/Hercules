@@ -11350,7 +11350,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		}
 			break;
 		case SC_GRAVITYCONTROL:
-			status_fix_damage(bl, bl, sce->val2, clif->damage(bl, bl, 0, 0, sce->val2, 0, BDT_NORMAL, 0));
+			status_fix_damage(bl, bl, sce->val2, clif->damage(bl, bl, 0, 0, sce->val2, 0, BDT_NORMAL, 0, 0));
 			clif->specialeffect(bl, 223, AREA);
 			clif->specialeffect(bl, 330, AREA);
 			break;
