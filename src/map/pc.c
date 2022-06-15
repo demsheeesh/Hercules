@@ -8278,7 +8278,7 @@ void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd,
 		add2limit(ssd->status.woe_statistics.kill_count, 1, USHRT_MAX);
 		add2limit(tsd->status.woe_statistics.death_count, 1, USHRT_MAX);
 
-		logs->woe_kill(ssd, tsd);
+		logs->woe_kill(ssd, tsd, skill_id);
 
 		//Killer msg
 		sprintf(output, "( You Kill the %s [%s] using <%s> )", pc->job_name(tsd->status.class), tsd->status.name, (skill_id ? skill->get_desc(skill_id) : "Melee/Reflect/Effect"));
