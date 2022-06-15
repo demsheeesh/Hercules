@@ -66906,7 +66906,7 @@ int HP_pc_dead(struct map_session_data *sd, struct block_list *src, int skill_id
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.pc.dead(sd, src, skill);
+		retVal___ = HPMHooks.source.pc.dead(sd, src, skill_id);
 	}
 	if (HPMHooks.count.HP_pc_dead_post > 0) {
 		int (*postHookFunc) (int retVal___, struct map_session_data *sd, struct block_list *src);
