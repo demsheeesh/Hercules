@@ -8245,6 +8245,17 @@ void pc_record_damage(struct block_list *src, struct block_list *dst, int damage
 			}
 			break;
 		}
+		case BL_NUL:
+		case BL_PET:
+		case BL_HOM:
+		case BL_MER:
+		case BL_ITEM:
+		case BL_SKILL:
+		case BL_NPC:
+		case BL_CHAT:
+		case BL_ELEM:
+		case BL_ALL:
+	break;
 	}
 }
 void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd, int skill_id)
