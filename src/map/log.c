@@ -234,7 +234,6 @@ int log_woe_kill(struct map_session_data *ssd, struct map_session_data *tsd)
 {
 	char esc_sname[NAME_LENGTH * 2 + 1];
 	char esc_tname[NAME_LENGTH * 2 + 1];
-	uint16 skill_id = 0;
 
 	SQL->EscapeStringLen(logs->mysql_handle, esc_sname, ssd->status.name, strnlen(ssd->status.name, NAME_LENGTH));
 	SQL->EscapeStringLen(logs->mysql_handle, esc_tname, tsd->status.name, strnlen(tsd->status.name, NAME_LENGTH));
