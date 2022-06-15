@@ -8263,7 +8263,6 @@ void pc_calc_ranking(struct map_session_data *tsd, struct map_session_data *ssd,
 		*------------------------------------------*/
 		struct guild *tg, *sg;
 		struct guild_castle *gc = guild->mapindex2gc(map_id2index(m));
-		uint16 skill_id;
 
 		if (gc == NULL || gc->guild_id <= 0)
 			return;
