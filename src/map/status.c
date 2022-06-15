@@ -244,7 +244,7 @@ static int status_damage__(struct block_list *src, struct block_list *target, in
 //If flag&2, fail if target does not has enough to subtract.
 //If flag&4, if killed, mob must not give exp/loot.
 //flag will be set to &8 when damaging sp of a dead character
-static int status_damage(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag, int skill_id)
+int status_damage_(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag, int skill_id)
 {
 	struct status_data *st;
 	struct status_change *sc;
