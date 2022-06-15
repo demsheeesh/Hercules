@@ -235,7 +235,7 @@ static int status_charge(struct block_list *bl, int64 hp, int64 sp)
 	return status->damage(NULL, bl, hp, sp, 0, 3);
 }
 
-int status_damage__(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag) {
+static int status_damage__(struct block_list *src, struct block_list *target, int64 in_hp, int64 in_sp, int walkdelay, int flag) {
 	return status->damage_(src,target, in_hp, in_sp, walkdelay, flag, 0);
 }
 
